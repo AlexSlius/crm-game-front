@@ -1,0 +1,9 @@
+{
+    "auth": "/login",
+    "home": "/",
+    "cities": "/cities",
+    "games": "/games",
+    "question": "/question-answer",
+    "teams": "/teams",
+    "users": "/users"
+}

@@ -1,0 +1,31 @@
+.c-l-h-100vh {
+    min-height: 100vh;
+}
+
+.ant-layout-sider {
+    border-right: 1px solid rgb(245 245 245);
+}
+
+.ant-layout-sider-children {
+    padding: 24px 14px !important;
+}
+
+.ant-menu {
+    border: none !important;
+}
+
+.c-lay-header {
+    background: #fff;
+    padding: 0 20px 0 0;
+    height: auto;
+}
+
+.ant-menu-title-content {
+    a {
+        font-weight: 500;
+    }
+}
+
+.ant-dropdown-trigger {
+    line-height: 1;
+}
