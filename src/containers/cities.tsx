@@ -1,6 +1,6 @@
 import { Flex, Typography, Button, Table, Tag, Space } from 'antd';
 import { Fragment } from 'react/jsx-runtime';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { EditOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
@@ -14,6 +14,13 @@ const data = [
 
 
 export const CitiesContainer = () => {
+    const [loading, setLoading] = useState(false);
+    const [pagination, setPagination] = useState({
+        current: 1,
+        pageSize: 10,
+        total: 0,
+    });
+
     const handleEdit = useCallback((record: any) => {
         console.log("Редагування запису:", record);
     }, []);
@@ -61,19 +68,20 @@ export const CitiesContainer = () => {
         <Fragment>
             <Flex justify='space-between' gap={14}>
                 <Title level={4} className='c-norm-title'>Міста</Title>
-                <Button type="primary">+Додати</Button>
+                <Button type="primary"  size='small'>+Додати</Button>
             </Flex>
             <Table
                 className='c-table-mt-40'
                 columns={columns}
                 dataSource={data}
-                pagination={{ pageSize: 20 }}
+                pagination={pagination}
                 size='small'
                 scroll={{ x: 1000 }}
+                loading={loading}
                 style={{ maxWidth: 1000 }}
                 onRow={(record) => ({
                     onClick: () => handleEdit(record),
-                    style: { cursor: "pointer" } 
+                    style: { cursor: "pointer" }
                 })}
             />
         </Fragment>

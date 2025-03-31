@@ -50,7 +50,7 @@ export const UserMenu = () => {
                     <Avatar icon={<UserOutlined />} />
                     <Flex vertical>
                         <Text strong>Олександр</Text>
-                        <Text type="success">Івано-Франківськ</Text>
+                        <Text type="success" title="Івано-Франківськ, Львів">Івано-Франківськ, Львів</Text>
                     </Flex>
                     <DownOutlined />
                 </Space>

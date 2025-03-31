@@ -3,6 +3,8 @@
     "home": "/",
     "cities": "/cities",
     "games": "/games",
+    "gamesActive": "/games/active",
+    "gamesAll": "/games/all",
     "question": "/question-answer",
     "teams": "/teams",
     "users": "/users"

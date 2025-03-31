@@ -13,6 +13,7 @@ import { ProtectedRoute } from "./components/security/protectedRouter";
 import { MainLayout } from "./layouts/main-layout";
 
 import CONSTANTS from "./constants/routers.json";
+import { GamsesActive } from "./pages/games-active";
 
 
 function App() {
@@ -31,8 +32,9 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route element={<MainLayout />}>
               <Route path={CONSTANTS.home} element={<Home />} />
+              <Route path={CONSTANTS.gamesActive} element={<GamsesActive />} />
+              <Route path={CONSTANTS.gamesAll} element={<Games />} />
               <Route path={CONSTANTS.cities} element={<Cities />} />
-              <Route path={CONSTANTS.games} element={<Games />} />
               <Route path={CONSTANTS.question} element={<QuestionAnswer />} />
               <Route path={CONSTANTS.teams} element={<Teams />} />
               <Route path={CONSTANTS.users} element={<Users />} />

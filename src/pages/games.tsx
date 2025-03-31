@@ -1,5 +1,7 @@
+import { GamseContainer } from "../containers/games"
+
 export const Games = () => {
     return (
-        <div></div>
+        <GamseContainer />
     )
 }

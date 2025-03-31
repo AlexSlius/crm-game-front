@@ -1,29 +1,46 @@
+import { useState, useCallback, useMemo } from 'react';
 import { Flex, Typography, Button, Table, Tag, Space, Select } from 'antd';
 import { Fragment } from 'react/jsx-runtime';
-import { useCallback, useMemo } from 'react';
 import { EditOutlined, SearchOutlined, CloseOutlined, DownloadOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
 
 const data = [
-    {
-        key: 1,
-        id: 1,
-        game: "Веселухи",
-        time: "26.06.2024 12:06:56",
-        team: 'Круті',
-        captain: 'Василь',
-        phone: "+380993794824",
-        quantity: 10,
-        quantityNew: 6,
-        city: 'Львів',
-        wish: "Тут можна залишити побажання на гру",
-        active: false,
-        note: "Примітка для огранізатора"
-    },
-    {
-        key: 2,
-        id: 2,
+    ...[
+        {
+            key: 1,
+            id: 1,
+            game: "Веселухи",
+            time: "26.06.2024 12:06:56",
+            team: 'Круті',
+            captain: 'Василь',
+            phone: "+380993794824",
+            quantity: 10,
+            quantityNew: 6,
+            city: 'Львів',
+            wish: "Тут можна залишити побажання на гру",
+            active: false,
+            note: "Примітка для огранізатора"
+        },
+        {
+            key: 2,
+            id: 2,
+            game: "Веселухи",
+            time: "26.06.2024 12:06:56",
+            team: 'Круті',
+            captain: 'Василь',
+            phone: "+380993794824",
+            quantity: 10,
+            quantityNew: 6,
+            city: 'Львів',
+            wish: "Тут можна залишити побажання на гру",
+            active: true,
+            note: "Примітка для огранізатора"
+        },
+    ],
+    ...([...new Array(50)].map((_, index: number) => ({
+        key: index + 3,
+        id: index + 3,
         game: "Веселухи",
         time: "26.06.2024 12:06:56",
         team: 'Круті',
@@ -35,11 +52,17 @@ const data = [
         wish: "Тут можна залишити побажання на гру",
         active: true,
         note: "Примітка для огранізатора"
-    },
+    })))
 ];
 
-
 export const TeamsContainer = () => {
+    const [loading, setLoading] = useState(false);
+    const [pagination, setPagination] = useState({
+        current: 1,
+        pageSize: 10,
+        total: 0,
+    });
+
     const handleEdit = useCallback((record: any) => {
         console.log("Редагування запису:", record);
     }, []);
@@ -127,7 +150,10 @@ export const TeamsContainer = () => {
         <Fragment>
             <Flex justify='space-between' gap={14}>
                 <Title level={4} className='c-norm-title'>Користувачі</Title>
-                <Button type="primary">+Додати</Button>
+                <Button
+                    type="primary"
+                    size='small'
+                >+Додати</Button>
             </Flex>
             <Flex className='c-flex-filter' gap={16} align='start'>
                 <Select
@@ -249,6 +275,7 @@ export const TeamsContainer = () => {
                         type="primary"
                         icon={<SearchOutlined />}
                         iconPosition={'start'}
+                        size='small'
                     >
                         Пошук по фільтру
                     </Button>
@@ -256,6 +283,7 @@ export const TeamsContainer = () => {
                         color="danger" variant="solid"
                         icon={<CloseOutlined />}
                         iconPosition={'start'}
+                        size='small'
                     >
                         Скинути фільтр
                     </Button>
@@ -265,6 +293,7 @@ export const TeamsContainer = () => {
                         color="cyan"
                         variant="solid"
                         icon={<DownloadOutlined />}
+                        size='small'
                     >
                         Скачати таблицю
                     </Button>
@@ -274,7 +303,8 @@ export const TeamsContainer = () => {
                 className='c-table-mt-40'
                 columns={columns}
                 dataSource={data}
-                pagination={{ pageSize: 20 }}
+                loading={loading}
+                pagination={pagination}
                 size='small'
                 scroll={{ x: 1000 }}
                 onRow={(record) => ({

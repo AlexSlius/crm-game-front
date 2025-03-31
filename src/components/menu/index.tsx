@@ -1,4 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 import { Menu } from 'antd';
 import {
@@ -14,12 +15,21 @@ import CONSTANTS from "../../constants/routers.json";
 
 export const MenuMain = () => {
     const location = useLocation();
+    const [openKeys, setOpenKeys] = useState<string[]>([]);
+
+    useEffect(() => {
+        if ([CONSTANTS.gamesActive, CONSTANTS.gamesAll].includes(location.pathname)) {
+            setOpenKeys([CONSTANTS.games]);
+        }
+    }, [location.pathname]);
 
     return (
         <Menu
             theme="dark"
             mode="inline"
+            openKeys={openKeys}
             selectedKeys={[location.pathname]}
+            onOpenChange={setOpenKeys}
             items={[
                 {
                     key: CONSTANTS.home,
@@ -29,7 +39,19 @@ export const MenuMain = () => {
                 {
                     key: CONSTANTS.games,
                     icon: <DiscordOutlined />,
-                    label: <Link to={CONSTANTS.games}>Ігри</Link>,
+                    label: 'Ігри',
+                    children: [
+                        {
+                            key: CONSTANTS.gamesActive,
+                            icon: <DiscordOutlined />,
+                            label: <Link to={CONSTANTS.gamesActive}>Активні</Link>,
+                        },
+                        {
+                            key: CONSTANTS.gamesAll,
+                            icon: <DiscordOutlined />,
+                            label: <Link to={CONSTANTS.gamesAll}>Всі</Link>,
+                        },
+                    ],
                 },
                 {
                     key: CONSTANTS.teams,
