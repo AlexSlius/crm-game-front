@@ -2,6 +2,7 @@ import { useState, useCallback, useMemo } from 'react';
 import { Flex, Typography, Button, Table, Tag, Space, Select } from 'antd';
 import { Fragment } from 'react/jsx-runtime';
 import { EditOutlined, SearchOutlined, CloseOutlined, DownloadOutlined } from "@ant-design/icons";
+import { TeamEditModal } from '../components/modals/edit-team';
 
 const { Title } = Typography;
 
@@ -55,7 +56,21 @@ const data = [
     })))
 ];
 
+const defaultDataModal = {
+    show: false,
+    data: {
+        id: null,
+        name: '',
+        email: '',
+        city: null,
+        role: null,
+        active: true,
+        password: null,
+    }
+};
+
 export const TeamsContainer = () => {
+    const [dataModal, setDataModal] = useState(defaultDataModal);
     const [loading, setLoading] = useState(false);
     const [pagination, setPagination] = useState({
         current: 1,
@@ -65,7 +80,24 @@ export const TeamsContainer = () => {
 
     const handleEdit = useCallback((record: any) => {
         console.log("Редагування запису:", record);
+
+        // setDataModal({
+        //     show: true,
+        //     data: {
+        //         id: record.id,
+        //         name: record.name,
+        //         email: record.email,
+        //         city: record.city.id,
+        //         role: record.role.id,
+        //         active: record.active,
+        //         password: null,
+        //     }
+        // });
     }, []);
+
+    const hCloseModal = () => {
+        setDataModal(defaultDataModal)
+    }
 
     const columns = useMemo(() => [
         {
@@ -153,6 +185,7 @@ export const TeamsContainer = () => {
                 <Button
                     type="primary"
                     size='small'
+                    onClick={() => setDataModal((prev) => ({ ...prev, show: true }))}
                 >+Додати</Button>
             </Flex>
             <Flex className='c-flex-filter' gap={16} align='start'>
@@ -312,6 +345,13 @@ export const TeamsContainer = () => {
                     style: { cursor: "pointer" }
                 })}
                 rowClassName={(record) => (record.active ? "" : "inactive-row")}
+            />
+
+            <TeamEditModal
+                isModalOpen={dataModal.show}
+                hCloseModal={hCloseModal}
+                data={dataModal.data}
+                setDataModal={setDataModal}
             />
         </Fragment>
     )
