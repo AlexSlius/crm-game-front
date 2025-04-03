@@ -7,10 +7,10 @@ const { Title } = Typography;
 const { Search } = Input;
 
 const data = [
-    { key: "1", id: 1, name: "Назва гри", city: "Львів", description: "Ну що ж, ви готові?😏", active: false },
-    { key: "2", id: 2, name: "Назва гри", city: "Львів", description: "Ну що ж, ви готові?😏", active: true },
-    { key: "3", id: 3, name: "Назва гри", city: "Львів", description: "Ну що ж, ви готові?😏", active: true },
-    { key: "4", id: 4, name: "Назва гри", city: "Львів", description: "Ну що ж, ви готові?😏", active: true },
+    { key: "1", id: 1, name: "Назва гри", city: "Львів", beginning: '26.06.2024 12:06:56', description: "Ну що ж, ви готові?😏", active: false },
+    { key: "2", id: 2, name: "Назва гри", city: "Львів", beginning: '26.06.2024 12:06:56', description: "Ну що ж, ви готові?😏", active: true },
+    { key: "3", id: 3, name: "Назва гри", city: "Львів", beginning: '26.06.2024 12:06:56', description: "Ну що ж, ви готові?😏", active: true },
+    { key: "4", id: 4, name: "Назва гри", city: "Львів", beginning: '26.06.2024 12:06:56', description: "Ну що ж, ви готові?😏", active: true },
 ];
 
 
@@ -41,6 +41,11 @@ export const GamseContainer = () => {
             title: "Місто",
             dataIndex: "city",
             key: "city",
+        },
+        {
+            title: "Початок",
+            dataIndex: "beginning",
+            key: "beginning",
         },
         {
             title: "Опис",

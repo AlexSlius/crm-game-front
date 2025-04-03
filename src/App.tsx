@@ -1,6 +1,10 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ConfigProvider } from 'antd';
 
+import ukUA from "antd/locale/uk_UA";
+import dayjs from "dayjs";
+import "dayjs/locale/uk";
+
 import { Autorization } from "./pages/autorization";
 import { Home } from "./pages/home";
 import { Cities } from "./pages/cities";
@@ -16,9 +20,14 @@ import CONSTANTS from "./constants/routers.json";
 import { GamsesActive } from "./pages/games-active";
 
 
+
+dayjs.locale("uk");
+
+
 function App() {
   return (
     <ConfigProvider
+      locale={ukUA}
       theme={{
         token: {
           controlHeight: 42,

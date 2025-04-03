@@ -1,15 +1,50 @@
 import { Flex, Typography, Button, Progress, Space, Row, Col, Card } from 'antd';
+import { useState, useCallback } from 'react';
 import { Fragment } from 'react/jsx-runtime';
 import { EditOutlined, TeamOutlined, SearchOutlined, CloseOutlined, DownloadOutlined } from "@ant-design/icons";
+import { GameEditModal } from '../components/modals/edit-game';
 
 const { Title } = Typography;
 
+const defaultDataModal = {
+    show: false,
+    data: {
+        id: null,
+        name: '',
+        city: null,
+        active: true,
+    }
+};
+
 export const GamsesActiveContainer = () => {
+    const [dataModal, setDataModal] = useState(defaultDataModal);
+
+    const handleEdit = useCallback((record: any) => {
+        console.log("Редагування запису:", record);
+
+        // setDataModal({
+        //     show: true,
+        //     data: {
+        //         id: record.id,
+        //         name: record.name,
+        //         email: record.email,
+        //         city: record.city.id,
+        //         role: record.role.id,
+        //         active: record.active,
+        //         password: null,
+        //     }
+        // });
+    }, []);
+
+    const hCloseModal = () => {
+        setDataModal(defaultDataModal)
+    }
+
     return (
         <Fragment>
             <Flex justify='space-between' gap={14}>
                 <Title level={4} className='c-norm-title'>Активні</Title>
-                <Button type="primary" size='small'>+Додати</Button>
+                <Button type="primary" size='small' onClick={() => setDataModal((prev) => ({ ...prev, show: true }))}>+Додати</Button>
             </Flex>
             {/* <Flex className='c-d-mt-24 c-bg-wh-p'>
                 <Title level={5} className='c-norm-title'>Місто: Суми</Title>
@@ -37,6 +72,7 @@ export const GamsesActiveContainer = () => {
                                             icon={<EditOutlined />}
                                             size='small'
                                             title="Редагувати"
+                                            onClick={() => handleEdit(item)}
                                         ></Button>
                                     </Space>
                                 }
@@ -58,6 +94,13 @@ export const GamsesActiveContainer = () => {
                     ))
                 }
             </Row>
+
+            <GameEditModal
+                isModalOpen={dataModal.show}
+                hCloseModal={hCloseModal}
+                data={dataModal.data}
+                setDataModal={setDataModal}
+            />
         </Fragment>
     )
 }

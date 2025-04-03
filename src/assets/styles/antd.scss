@@ -45,8 +45,8 @@
 }
 
 .inactive-row {
-    background-color: #ffe6e6 !important; 
-    color: #d9534f !important; 
+    background-color: #ffe6e6 !important;
+    color: #d9534f !important;
 }
 
 .c-flex-filter {
@@ -58,7 +58,7 @@
 }
 
 .ant-menu-sub {
-    background: transparent!important;
+    background: transparent !important;
 }
 
 .c-d-mt-24 {
@@ -69,4 +69,23 @@
     background: #fff;
     padding: 14px 24px;
     border-radius: 8px;
+}
+
+.picture-uploader {
+    width: 100%;
+
+    .ant-upload-select {
+        width: 100% !important;
+        height: auto !important;
+        padding-bottom: 100%;
+        position: relative;
+
+        .ant-upload {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    }
 }
