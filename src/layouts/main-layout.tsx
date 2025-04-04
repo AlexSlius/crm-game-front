@@ -1,11 +1,8 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import { Outlet } from "react-router-dom";
-
-import {
-    MenuFoldOutlined,
-    MenuUnfoldOutlined,
-} from '@ant-design/icons';
-import { Button, Layout, theme, Flex } from 'antd';
+import { MenuFoldOutlined, MenuUnfoldOutlined, } from '@ant-design/icons';
+import { Button, Layout, theme, Flex, Drawer, Grid } from 'antd';
+import { useLocation } from 'react-router-dom'
 
 import { MenuMain } from '../components/menu';
 import { UserMenu } from '../components/user-menu';
@@ -16,28 +13,64 @@ import { ChangePasswordModal } from '../components/modals/change-password';
 import { useModalChangePasswordStore } from '../store/moda-change-password';
 
 const { Header, Sider, Content } = Layout;
+const { useBreakpoint } = Grid;
 
 export const MainLayout = () => {
     const [collapsed, setCollapsed] = useState<boolean>(false);
     const { closeModal, isOpenModal } = useModalLogoutStore();
-    const {isOpenModalChange, closeModalChange} = useModalChangePasswordStore();
+    const { isOpenModalChange, closeModalChange } = useModalChangePasswordStore();
+
+    const location = useLocation()
+    const screens = useBreakpoint();
+    const isMobile = !screens.md;
+
+    let siderWidth = 300;
+
+    if (screens.lg && !screens.xl) {
+        siderWidth = 250;
+    } else if (!screens.lg) {
+        siderWidth = 200;
+    }
 
     const {
-        token: {borderRadiusLG },
+        token: { borderRadiusLG },
     } = theme.useToken();
+
+    useEffect(() => {
+        if (isMobile)
+            setCollapsed(false)
+    }, [location.pathname])
 
     return (
         <Fragment>
             <Layout className="c-l-h-100vh">
-                <Sider
-                    trigger={null}
-                    collapsible
-                    collapsed={collapsed}
-                    width="300"
-                    theme="dark"
-                >
-                    <MenuMain />
-                </Sider>
+                {
+                    !isMobile && (
+                        <Sider
+                            trigger={null}
+                            collapsible
+                            collapsed={collapsed}
+                            width={siderWidth}
+                            theme="dark"
+                        >
+                            <MenuMain />
+                        </Sider>
+                    )
+                }
+
+                {
+                    isMobile && (
+                        <Drawer
+                            placement="left"
+                            closable={true}
+                            onClose={() => setCollapsed(false)}
+                            open={collapsed}
+                            width={250}
+                        >
+                            <MenuMain />
+                        </Drawer>
+                    )
+                }
 
                 <Layout>
                     <Header

@@ -7,10 +7,23 @@ const { Title } = Typography;
 const { Search } = Input;
 
 const data = [
-    { key: "1", id: 1, name: "Назва гри", city: "Львів", beginning: '26.06.2024 12:06:56', description: "Ну що ж, ви готові?😏", active: false },
-    { key: "2", id: 2, name: "Назва гри", city: "Львів", beginning: '26.06.2024 12:06:56', description: "Ну що ж, ви готові?😏", active: true },
-    { key: "3", id: 3, name: "Назва гри", city: "Львів", beginning: '26.06.2024 12:06:56', description: "Ну що ж, ви готові?😏", active: true },
-    { key: "4", id: 4, name: "Назва гри", city: "Львів", beginning: '26.06.2024 12:06:56', description: "Ну що ж, ви готові?😏", active: true },
+    {
+        key: "1",
+        id: 1,
+        name: "Назва гри",
+        city: "Львів",
+        beginning: '26.06.2024 12:06:56',
+        places: 15,
+        registr: 10,
+        canceled: 1,
+        rezerv: 4,
+        description: "Ну що ж, ви готові?😏",
+        active: {
+            id: 1,
+            name: 'Завершена',
+            color: 'red',
+        }
+    },
 ];
 
 
@@ -48,6 +61,26 @@ export const GamseContainer = () => {
             key: "beginning",
         },
         {
+            title: "Місць",
+            dataIndex: "places",
+            key: "places",
+        },
+        {
+            title: "Команд",
+            dataIndex: "registr",
+            key: "registr",
+        },
+        {
+            title: "Резерв",
+            dataIndex: "rezerv",
+            key: "rezerv",
+        },
+        {
+            title: "Скасувало",
+            dataIndex: "canceled",
+            key: "canceled",
+        },
+        {
             title: "Опис",
             dataIndex: "description",
             key: "description",
@@ -56,8 +89,7 @@ export const GamseContainer = () => {
             title: "Статус",
             dataIndex: "active",
             key: "status",
-            render: (active: boolean) =>
-                active ? <Tag color="green">Активний</Tag> : <Tag color="red">Неактивний</Tag>,
+            render: (obj: {id: number, name:string, color: string}) => <Tag color={obj.color}>{obj.name}</Tag>
         },
         {
             title: "Дії",
@@ -89,10 +121,10 @@ export const GamseContainer = () => {
         <Fragment>
             <Flex justify='space-between' gap={14}>
                 <Title level={4} className='c-norm-title'>Всі</Title>
-                <Button size='small' type="primary">+Додати</Button>
+                <Button size='small' className='mob-btn-stan-none' type="primary">+<span className='mob-btn-stan-none_span'>Додати</span></Button>
             </Flex>
             <Flex className='c-flex-filter' gap={16} align='start' justify='space-between'>
-                <Flex gap={16}>
+                <Flex gap={16} wrap="wrap">
                     <Select
                         showSearch
                         mode="tags"
@@ -151,8 +183,9 @@ export const GamseContainer = () => {
                             icon={<CloseOutlined />}
                             iconPosition={'start'}
                             size='small'
+                            className='mob-btn-stan-none'
                         >
-                            Скинути фільтр
+                            <span className='mob-btn-stan-none_span'>Скинути фільтр</span>
                         </Button>
                     </Flex>
                 </Flex>

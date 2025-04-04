@@ -92,7 +92,7 @@ export const CitiesContainer = () => {
         <Fragment>
             <Flex justify='space-between' gap={14}>
                 <Title level={4} className='c-norm-title'>Міста</Title>
-                <Button type="primary" size='small' onClick={() => setDataModal((prev) => ({...prev, show: true}))}>+Додати</Button>
+                <Button type="primary" className='mob-btn-stan-none' size='small' onClick={() => setDataModal((prev) => ({...prev, show: true}))}>+<span className='mob-btn-stan-none_span'>Додати</span></Button>
             </Flex>
             <Table
                 className='c-table-mt-40'

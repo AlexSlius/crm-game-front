@@ -185,15 +185,16 @@ export const TeamsContainer = () => {
                 <Button
                     type="primary"
                     size='small'
+                    className='mob-btn-stan-none'
                     onClick={() => setDataModal((prev) => ({ ...prev, show: true }))}
-                >+Додати</Button>
+                >+<span className='mob-btn-stan-none_span'>Додати</span></Button>
             </Flex>
-            <Flex className='c-flex-filter' gap={16} align='start'>
+            <Flex className='c-flex-filter' gap={16} align='start' wrap="wrap">
                 <Select
                     showSearch
                     mode="tags"
                     size='small'
-                    style={{ width: 160 }}
+                    style={{ width: 150 }}
                     placeholder="Гра"
                     optionFilterProp="label"
                     filterSort={(optionA, optionB) =>
@@ -211,7 +212,7 @@ export const TeamsContainer = () => {
                     showSearch
                     mode="tags"
                     size='small'
-                    style={{ width: 160 }}
+                    style={{ width: 150 }}
                     placeholder="Команда"
                     optionFilterProp="label"
                     filterSort={(optionA, optionB) =>
@@ -233,7 +234,7 @@ export const TeamsContainer = () => {
                     showSearch
                     mode="tags"
                     size='small'
-                    style={{ width: 160 }}
+                    style={{ width: 150 }}
                     placeholder="Капітан"
                     optionFilterProp="label"
                     filterSort={(optionA, optionB) =>
@@ -251,7 +252,7 @@ export const TeamsContainer = () => {
                     showSearch
                     mode="tags"
                     size='small'
-                    style={{ width: 160 }}
+                    style={{ width: 150 }}
                     placeholder="Телефон"
                     optionFilterProp="label"
                     filterSort={(optionA, optionB) =>
@@ -269,7 +270,7 @@ export const TeamsContainer = () => {
                     showSearch
                     mode="tags"
                     size='small'
-                    style={{ width: 160 }}
+                    style={{ width: 150 }}
                     placeholder="Місто"
                     optionFilterProp="label"
                     filterSort={(optionA, optionB) =>
@@ -287,7 +288,7 @@ export const TeamsContainer = () => {
                     showSearch
                     mode="tags"
                     size='small'
-                    style={{ width: 160 }}
+                    style={{ width: 150 }}
                     placeholder="Статус"
                     optionFilterProp="label"
                     filterSort={(optionA, optionB) =>
@@ -317,8 +318,9 @@ export const TeamsContainer = () => {
                         icon={<CloseOutlined />}
                         iconPosition={'start'}
                         size='small'
+                        className='mob-btn-stan-none'
                     >
-                        Скинути фільтр
+                        <span className='mob-btn-stan-none_span'>Скинути фільтр</span>
                     </Button>
                 </Flex>
                 <Flex>
@@ -327,11 +329,13 @@ export const TeamsContainer = () => {
                         variant="solid"
                         icon={<DownloadOutlined />}
                         size='small'
+                        className='mob-btn-stan-none'
                     >
-                        Скачати таблицю
+                        <span className='mob-btn-stan-none_span'>Скачати таблицю</span>
                     </Button>
                 </Flex>
             </Flex>
+
             <Table
                 className='c-table-mt-40'
                 columns={columns}

@@ -3,6 +3,7 @@ import { useState, useCallback } from 'react';
 import { Fragment } from 'react/jsx-runtime';
 import { EditOutlined, TeamOutlined, SearchOutlined, CloseOutlined, DownloadOutlined } from "@ant-design/icons";
 import { GameEditModal } from '../components/modals/edit-game';
+import { ListTeamModal } from '../components/modals/list-temas';
 
 const { Title } = Typography;
 
@@ -16,8 +17,14 @@ const defaultDataModal = {
     }
 };
 
+const defaultDataModalTemaList = {
+    show: false,
+    id: null
+}
+
 export const GamsesActiveContainer = () => {
     const [dataModal, setDataModal] = useState(defaultDataModal);
+    const [dataModalListTeam, setDataModalListTeam] = useState(defaultDataModalTemaList);
 
     const handleEdit = useCallback((record: any) => {
         console.log("Редагування запису:", record);
@@ -36,15 +43,26 @@ export const GamsesActiveContainer = () => {
         // });
     }, []);
 
+    const handleOpenModalTeam = useCallback((record: any) => {
+        setDataModalListTeam({
+            show: true,
+            id: record.id
+        });
+    }, []);
+
     const hCloseModal = () => {
-        setDataModal(defaultDataModal)
+        setDataModal(defaultDataModal);
+    }
+
+    const hCloseModalListTeam = () => {
+        setDataModalListTeam(defaultDataModalTemaList);
     }
 
     return (
         <Fragment>
             <Flex justify='space-between' gap={14}>
                 <Title level={4} className='c-norm-title'>Активні</Title>
-                <Button type="primary" size='small' onClick={() => setDataModal((prev) => ({ ...prev, show: true }))}>+Додати</Button>
+                <Button type="primary" size='small' className='mob-btn-stan-none' onClick={() => setDataModal((prev) => ({ ...prev, show: true }))}>+<span className='mob-btn-stan-none_span'>Додати</span></Button>
             </Flex>
             {/* <Flex className='c-d-mt-24 c-bg-wh-p'>
                 <Title level={5} className='c-norm-title'>Місто: Суми</Title>
@@ -65,6 +83,7 @@ export const GamsesActiveContainer = () => {
                                             icon={<TeamOutlined />}
                                             size='small'
                                             title="Команди"
+                                            onClick={() => handleOpenModalTeam(1)}
                                         ></Button>
                                         <Button
                                             color="primary"
@@ -100,6 +119,12 @@ export const GamsesActiveContainer = () => {
                 hCloseModal={hCloseModal}
                 data={dataModal.data}
                 setDataModal={setDataModal}
+            />
+
+            <ListTeamModal
+                isModalOpen={dataModalListTeam.show}
+                data={{ id: dataModalListTeam.id }}
+                hCloseModal={hCloseModalListTeam}
             />
         </Fragment>
     )

@@ -110,7 +110,7 @@ export const UsersContainer = () => {
         <Fragment>
             <Flex justify='space-between' gap={14}>
                 <Title level={4} className='c-norm-title'>Користувачі</Title>
-                <Button size='small' type="primary" onClick={() => setDataModal((prev) => ({...prev, show: true}))}>+Додати</Button>
+                <Button size='small'  className='mob-btn-stan-none' type="primary" onClick={() => setDataModal((prev) => ({...prev, show: true}))}>+<span className='mob-btn-stan-none_span'>Додати</span></Button>
             </Flex>
             <Table
                 className='c-table-mt-40'

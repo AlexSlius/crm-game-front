@@ -89,3 +89,36 @@
         }
     }
 }
+
+
+.ant-drawer-body {
+    padding: 0 !important;
+}
+
+.ant-drawer-content {
+    background: #001529 !important;
+}
+
+.ant-drawer .anticon-close {
+    svg {
+        color: #fff !important;
+    }
+}
+
+.ant-drawer-header-title {
+    .ant-drawer-close {
+        margin-left: auto;
+    }
+}
+
+.ant-btn {
+    min-width: 32px;
+}
+
+@media(max-width: 991px) {
+    .mob-btn-stan-none {
+        .mob-btn-stan-none_span {
+            display: none;
+        }
+    }
+}
