@@ -1,10 +1,23 @@
-import { Navigate, Outlet } from "react-router-dom";
-import { useAuthStore } from "../../store/auth";
+import { Spin } from 'antd';
+import { Outlet } from "react-router-dom";
+
+import { useInitAppData } from "../../hooks/useInitAppData";
 
 export const ProtectedRoute = () => {
-    const { isAuthenticated } = useAuthStore();
+    const { globalFetching } = useInitAppData();
 
-    // return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
+    if (globalFetching) {
+        return (
+            <div style={{
+                height: '100vh',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}>
+                <Spin size="large" />
+            </div>
+        );
+    }
 
-    return  <Outlet />;
+    return <Outlet />;
 }

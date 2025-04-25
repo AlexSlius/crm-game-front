@@ -1,45 +1,40 @@
-import { Col, Row, Card, Flex, Progress, Space, Typography } from 'antd';
+import { Col, Row, Card } from 'antd';
 import { Fragment } from "react/jsx-runtime";
-import { Link } from "react-router-dom";
+import { useQuery } from '@tanstack/react-query';
 
-import CONSTANTS from "../constants/routers.json";
-
-const { Title } = Typography;
+import {
+    games,
+} from '../api';
 
 export const HomeContainer = () => {
+    const params = new URLSearchParams();
+
+    params.append('statuses', '1');
+    params.append('statuses', '3');
+    params.append('limit', '100');
+
+    const {
+        data,
+    } = useQuery<any, Error>({
+        queryKey: ['games'],
+        queryFn: () => games.getGames(`?${params.toString()}`),
+    });
+
     return (
         <Fragment>
             <Row gutter={[24, 24]}>
-                <Col xs={24} sm={24} md={24} lg={12}>
-                    <Card title={`Активних ігор: 2`} variant="borderless" className='c-card-item'>
-                        <Flex gap={20} vertical>
-                            <Space direction="vertical" className='c-card-space'>
-                                <Link to={CONSTANTS.gamesActive}>
-                                    <Title level={5} className='c-norm-title'>1. Рейтинова гра</Title>
-                                </Link>
-                                <Flex className='c-c-flex-inf'>
-                                    <div>Кількість місць: 15</div>
-                                    <div>Зареєструвалось: 5</div>
-                                    <div>Скасували: 2</div>
-                                    <div>Заявок: 0</div>
-                                    <div>Місто: Суми</div>
-                                </Flex>
-                                <Progress percent={30} />
-                            </Space>
-                            <Space direction="vertical" className='c-card-space'>
-                                <Link to={CONSTANTS.gamesActive}>
-                                    <Title level={5} className='c-norm-title'>2. Рейтинова гра</Title>
-                                </Link>
-                                <Flex className='c-c-flex-inf'>
-                                    <div>Кількість місць: 15</div>
-                                    <div>Зареєструвалось: 5</div>
-                                    <div>Скасували: 2</div>
-                                    <div>Заявок: 0</div>
-                                    <div>Місто: Львів</div>
-                                </Flex>
-                                <Progress percent={30} />
-                            </Space>
-                        </Flex>
+                <Col xs={24} sm={24} md={12} lg={6}>
+                    <Card title={`Активних ігор`} variant="borderless" className='c-card-item'>
+                        <div className='wr-title-game-quant'>
+                            {data?.data?.map((el: any) => el.statusId === 1).length}
+                        </div>
+                    </Card>
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={6}>
+                    <Card title={`Нових запитань`} variant="borderless" className='c-card-item'>
+                        <div className='wr-title-game-quant'>
+                            {data?.data?.map((el: any) => el.statusId === 1).length}
+                        </div>
                     </Card>
                 </Col>
             </Row>

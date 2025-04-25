@@ -1,4 +1,10 @@
 import { Form, Input, Button, Modal } from 'antd';
+import { useMutation } from '@tanstack/react-query';
+
+import {
+    user
+} from '../../api';
+import { useNoteStore } from '../../store/note';
 
 export const ResetPassword = ({
     isModalOpen = false,
@@ -7,9 +13,19 @@ export const ResetPassword = ({
     isModalOpen: boolean,
     hCloseModal: Function,
 }) => {
+    const { setMessage } = useNoteStore();
+
+    // const { mutate } = useMutation({
+    //     mutationFn: user.updatePassword,
+    //     onSuccess: (data) => {
+    //         console.log()
+    //     },
+    // });
+
     const handleCloseModal = () => {
         hCloseModal();
     }
+
 
     return (
         <Modal

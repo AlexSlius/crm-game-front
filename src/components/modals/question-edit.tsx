@@ -1,26 +1,33 @@
 import { Form, Input, Button, Modal, Select } from 'antd';
+import { useMutation } from '@tanstack/react-query';
+import { useEffect } from "react";
 
 import { useAppData } from '../../store/appData';
 import { useGetCitiesNow } from '../../hooks/useGetCitiesNow';
-import { useEffect } from 'react';
+import { timeZona } from "../../api";
 
-export const UserEditModal = ({
+const { TextArea } = Input;
+
+export const QuestionEditModal = ({
     isModalOpen = false,
-    isLoadBtn = false,
     data = {},
+    isLoadBtn = false,
     hCloseModal = () => { },
     mutateCreate = () => { },
     mutateUpdate = () => { },
 }: {
     isModalOpen: boolean,
     hCloseModal: (e: React.MouseEvent<HTMLButtonElement>) => void;
-    isLoadBtn: boolean;
     data: any;
+    isLoadBtn: boolean;
     mutateCreate: any;
     mutateUpdate: any;
 }) => {
-    const { roles, statuses } = useAppData();
+    const [form] = Form.useForm();
     const { fetchCities, citiesData, isLoadingCity } = useGetCitiesNow();
+    const { user, statuses } = useAppData();
+
+    const userModer = user?.role?.id === 1;
 
     const debouncedSearchCity = (text: any) => {
         fetchCities({ search: text });
@@ -28,27 +35,34 @@ export const UserEditModal = ({
 
     const handleSubmit = (values: any) => {
         if (!data?.id) {
-            mutateCreate(values);
+            mutateCreate({ ...values, chatId: '-' });
         } else {
-            const { password, ...other } = values;
             mutateUpdate({
                 id: data.id,
-                ...other,
-                ...(!!password && {
-                    password
-                })
+                ...values
             });
         }
     };
 
     useEffect(() => {
-        if (isModalOpen)
+        if (isModalOpen && user?.role?.id === 1) {
             fetchCities({});
-    }, [isModalOpen]);
+        }
+
+        if (!isModalOpen) {
+            form.resetFields();
+        }
+    }, [isModalOpen, user]);
+
+    useEffect(() => {
+        if (user?.role?.id !== 1) {
+            form.setFieldValue('cityId', user?.city[0]?.id);
+        }
+    }, [user]);
 
     return (
         <Modal
-            title={!!data?.id ? 'Редагувати' : 'Новий користувач'}
+            title={!!data?.id ? 'Редагувати' : 'Нове питання'}
             open={isModalOpen}
             onCancel={hCloseModal}
             width={{
@@ -63,6 +77,7 @@ export const UserEditModal = ({
             destroyOnClose
         >
             <Form
+                form={form}
                 name="reset"
                 layout="vertical"
                 initialValues={data}
@@ -70,7 +85,24 @@ export const UserEditModal = ({
                 onFinish={handleSubmit}
             >
                 <Form.Item
-                    label="Ім'я"
+                    label="Username в телеграм"
+                    name="nickname"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Поле обов'язкове"
+                        },
+                        {
+                            pattern: /^@[\w\d_]{1,}$/,
+                            message: "Username повинен починатися з @ та містити",
+                        }
+                    ]}
+                >
+                    <Input placeholder="@alex" />
+                </Form.Item>
+
+                <Form.Item
+                    label="Автор Ім'я"
                     name="name"
                     rules={[
                         {
@@ -79,45 +111,38 @@ export const UserEditModal = ({
                         }
                     ]}
                 >
-                    <Input placeholder="Василь" />
+                    <Input placeholder="Давід" />
                 </Form.Item>
 
                 <Form.Item
-                    label="Пошта"
-                    name="email"
+                    label="Телефон"
+                    name="phone"
                     rules={[
                         {
                             required: true,
-                            message: "Поле пошта обов'язкове!"
-                        }, {
-                            type: "email",
-                            message: "Введіть коректну електронну пошту!",
-                            validateTrigger: "onSubmit"
+                            message: "Поле обов'язкове"
                         }
                     ]}
                 >
-                    <Input placeholder="email@gmail.com" />
+                    <Input placeholder="+380..." />
+                </Form.Item>
+
+                <Form.Item
+                    label="Назва команди"
+                    name="team"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Поле обов'язкове"
+                        }
+                    ]}
+                >
+                    <Input placeholder="Веселі" />
                 </Form.Item>
 
                 <Form.Item
                     label="Місто"
                     name="cityId"
-                >
-                    <Select
-                        mode="multiple"
-                        showSearch
-                        loading={isLoadingCity}
-                        placeholder="Місто"
-                        optionFilterProp="label"
-                        filterOption={false}
-                        onSearch={debouncedSearchCity}
-                        options={citiesData?.data?.map((el: { id: number, name: string }) => ({ value: el.id, label: el.name }))}
-                    />
-                </Form.Item>
-
-                <Form.Item
-                    label="Роль"
-                    name="roleId"
                     rules={[
                         {
                             required: true,
@@ -127,26 +152,41 @@ export const UserEditModal = ({
                 >
                     <Select
                         showSearch
-                        placeholder="Модератор"
+                        loading={isLoadingCity}
+                        placeholder="Місто"
                         optionFilterProp="label"
-                        filterSort={(optionA, optionB) =>
-                            (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-                        }
-                        options={roles.map(el => ({ value: el.id, label: el.name }))}
+                        filterOption={false}
+                        onSearch={userModer ? debouncedSearchCity : () => { }}
+                        options={(userModer ? citiesData?.data : user?.city)?.map((el: { id: number, name: string }) => ({ value: el.id, label: el.name }))}
                     />
                 </Form.Item>
 
                 <Form.Item
-                    label="Пароль"
-                    name="password"
+                    label="Запитання"
+                    name="question"
                     rules={[
                         {
-                            required: !!data?.id ? false : true,
-                            message: "Поле пароль обов'язкове!"
+                            required: true,
+                            message: "Поле обов'язкове"
                         }
                     ]}
                 >
-                    <Input.Password placeholder="Password" />
+                    <TextArea
+                        rows={2}
+                        maxLength={2000}
+                        showCount
+                    />
+                </Form.Item>
+
+                <Form.Item
+                    label="Відповідь"
+                    name="answer"
+                >
+                    <TextArea
+                        rows={2}
+                        maxLength={1000}
+                        showCount
+                    />
                 </Form.Item>
 
                 <Form.Item
@@ -160,7 +200,7 @@ export const UserEditModal = ({
                         filterSort={(optionA, optionB) =>
                             (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
                         }
-                        options={statuses?.map(el => ({ value: el.id, label: el.name })).filter(((el: { value: number }) => [1, 2, 4].includes(el.value)))}
+                        options={statuses?.map(el => ({ value: el.id, label: el.name })).filter(((el: { value: number }) => [8, 9].includes(el.value)))}
                     />
                 </Form.Item>
 

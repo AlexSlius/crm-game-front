@@ -9,9 +9,15 @@ import { useModalChangePasswordStore } from '../../store/moda-change-password';
 const { Text } = Typography;
 
 
-export const UserMenu = () => {
+export const UserMenu = ({
+    dataUser
+}: {
+    dataUser: any
+}) => {
     const { openModal } = useModalLogoutStore();
     const { openModalChange } = useModalChangePasswordStore();
+
+    const cities = dataUser?.city?.map((el: { name: string, id: number }) => el.name).join(", ") || 'Без міста';
 
     const items: MenuProps['items'] = [
         {
@@ -49,8 +55,8 @@ export const UserMenu = () => {
                 <Space>
                     <Avatar icon={<UserOutlined />} />
                     <Flex vertical>
-                        <Text strong>Олександр</Text>
-                        <Text type="success" title="Івано-Франківськ, Львів">Івано-Франківськ, Львів</Text>
+                        <Text strong>{dataUser?.name || ''}</Text>
+                        <Text type="success" title={cities}>{cities}</Text>
                     </Flex>
                     <DownOutlined />
                 </Space>

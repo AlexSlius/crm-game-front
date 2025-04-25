@@ -2,28 +2,44 @@ import { useState } from 'react';
 import { Form, Input, Button, Typography, Flex } from "antd";
 import { Fragment } from "react/jsx-runtime";
 import { useNavigate } from "react-router-dom";
+import { useMutation } from '@tanstack/react-query';
 
 import { ResetPassword } from "../components/modals/reset-password";
-import { useAuthStore } from '../store/auth';
+import { auth } from "../api";
 
 import CONSTANTS from "../constants/routers.json";
+import { useNoteStore } from '../store/note';
 
 const { Title } = Typography;
 
 
 export const AutorizationContainer = () => {
     const [openReset, setOpenReset] = useState<boolean>(false);
+    const { setMessage } = useNoteStore();
 
-    const { login } = useAuthStore();
     const navigate = useNavigate();
+
+    const { mutate, isPending, isError, error } = useMutation({
+        mutationFn: auth.login,
+        onSuccess: (data) => {
+
+            if (data?.message) {
+                return setMessage(data.message.join(', '));
+            }
+
+            if (data?.token) {
+                localStorage.setItem('token', data.token);
+                navigate(CONSTANTS.home);
+            }
+        },
+    });
 
     const closeModalReset = () => {
         setOpenReset(false);
     }
 
-    const handleFinish = () => {
-        login();
-        navigate(CONSTANTS.home);
+    const handleFinish = async (data: { email: string, password: string }) => {
+        mutate(data);
     }
 
     return (
@@ -70,7 +86,7 @@ export const AutorizationContainer = () => {
                             <Input.Password placeholder="Password" />
                         </Form.Item>
 
-                        <Flex justify="end">
+                        <Flex align="end" vertical={true}>
                             <Button
                                 size="small"
                                 color="primary"
@@ -83,7 +99,7 @@ export const AutorizationContainer = () => {
                             <Button
                                 type="primary"
                                 htmlType="submit"
-                                loading={false}
+                                loading={isPending}
                                 block>Увійти</Button>
                         </Form.Item>
                     </Form>

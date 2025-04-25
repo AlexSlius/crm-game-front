@@ -11,6 +11,7 @@ import { ConfirmationlogoutModal } from '../components/modals/confirmation-logou
 import { useModalLogoutStore } from '../store/modal-logout';
 import { ChangePasswordModal } from '../components/modals/change-password';
 import { useModalChangePasswordStore } from '../store/moda-change-password';
+import { useAppData } from '../store/appData';
 
 const { Header, Sider, Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -19,6 +20,7 @@ export const MainLayout = () => {
     const [collapsed, setCollapsed] = useState<boolean>(false);
     const { closeModal, isOpenModal } = useModalLogoutStore();
     const { isOpenModalChange, closeModalChange } = useModalChangePasswordStore();
+    const { user } = useAppData();
 
     const location = useLocation()
     const screens = useBreakpoint();
@@ -39,7 +41,7 @@ export const MainLayout = () => {
     useEffect(() => {
         if (isMobile)
             setCollapsed(false)
-    }, [location.pathname])
+    }, [location.pathname]);
 
     return (
         <Fragment>
@@ -53,7 +55,7 @@ export const MainLayout = () => {
                             width={siderWidth}
                             theme="dark"
                         >
-                            <MenuMain />
+                            <MenuMain dataUser={user} />
                         </Sider>
                     )
                 }
@@ -67,7 +69,7 @@ export const MainLayout = () => {
                             open={collapsed}
                             width={250}
                         >
-                            <MenuMain />
+                            <MenuMain dataUser={user} />
                         </Drawer>
                     )
                 }
@@ -88,7 +90,7 @@ export const MainLayout = () => {
                                 }}
                             />
                             <Flex align="center" gap={20}>
-                                <UserMenu />
+                                <UserMenu dataUser={user} />
                             </Flex>
                         </Flex>
                     </Header>

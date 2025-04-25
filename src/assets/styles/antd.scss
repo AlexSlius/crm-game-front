@@ -45,8 +45,11 @@
 }
 
 .inactive-row {
-    background-color: #ffe6e6 !important;
-    color: #d9534f !important;
+    background-color: #ffd2d2 !important;
+}
+
+.reserved-row {
+    background-color: #beccf142 !important;
 }
 
 .c-flex-filter {
@@ -115,10 +118,93 @@
     min-width: 32px;
 }
 
+.ant-alert {
+    position: fixed;
+    max-width: 500px;
+    top: 40px;
+    right: 40px;
+    padding: 14px 14px !important;
+    z-index: 10000;
+}
+
+.top-role-name {
+    color: #fff;
+    font-weight: 500;
+    padding: 10px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.2);
+
+    p {
+        margin: 0;
+        max-width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    margin-bottom: 20px;
+}
+
+.wr-title-game-quant {
+    font-size: 120px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.wr-update {
+    position: relative;
+}
+
+.ant-upload-list-item-container {
+    width: 100% !important;
+}
+
+.ant-upload-list-item.ant-upload-list-item-done,
+.ant-upload-list-item-thumbnail,
+.ant-upload-list-item-image,
+.ant-upload-list-item,
+.ant-upload-list-item-container {
+    height: auto !important;
+}
+
+.c-card-item {
+    height: 100%;
+}
+
+.ant-upload-list-item-image {
+    min-height: 140px;
+}
+
+.empty-cart {
+    text-align: center;
+    padding: 40px 10px;
+    font-weight: 500;
+}
+
+.ant-input-number {
+    width: 100%;
+}
+
+.hidden_сol {
+    display: none;
+}
+
 @media(max-width: 991px) {
     .mob-btn-stan-none {
         .mob-btn-stan-none_span {
             display: none;
         }
+    }
+
+    .ant-alert {
+        max-width: 360px;
+    }
+
+    .top-role-name {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    .wr-title-game-quant {
+        font-size: 70px;
     }
 }

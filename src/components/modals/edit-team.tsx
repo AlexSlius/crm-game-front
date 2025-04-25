@@ -1,4 +1,10 @@
-import { Form, Input, Button, Modal, Select, Radio, Row, Col, Flex } from 'antd';
+import { Form, Input, Button, Modal, Select, Row, Col, Flex, InputNumber } from 'antd';
+import { useEffect } from "react";
+import { useQuery, useMutation } from '@tanstack/react-query';
+
+import { useAppData } from '../../store/appData';
+import { useNoteStore } from '../../store/note';
+import { games, teams } from "../../api";
 
 const { TextArea } = Input;
 
@@ -6,16 +12,107 @@ export const TeamEditModal = ({
     isModalOpen = false,
     data = {},
     hCloseModal = () => { },
-    setDataModal = () => { },
+    refetchReload = () => { },
 }: {
     isModalOpen: boolean,
-    hCloseModal: (e: React.MouseEvent<HTMLButtonElement>) => void;
-    setDataModal: Function,
+    hCloseModal: () => void;
+    refetchReload?: () => void;
     data: any;
 }) => {
+    const [form] = Form.useForm();
+    const { setMessage } = useNoteStore();
+    const { statuses } = useAppData();
+
+    const params = new URLSearchParams();
+
+    params.append('statuses', '1');
+    params.append('statuses', '3');
+    params.append('limit', '100');
+
+    const {
+        isLoading,
+        refetch,
+        data: dataGame,
+    } = useQuery<any, Error>({
+        queryKey: ['games-modal-active'],
+        queryFn: () => games.getGames(`?${params.toString()}`),
+        enabled: false,
+    });
+
+    const {
+        mutate: mutateCreate,
+        isPending: isLoadingCreate
+    } = useMutation({
+        mutationFn: teams.create,
+        onSuccess: (data) => {
+            if (data?.message) {
+                return setMessage(data?.message.join(", "));
+            }
+
+            hCloseModal();
+            refetchReload();
+            setMessage('Команда успішно додана', 'success');
+        },
+    });
+
+    const {
+        mutate: mutateUpdate,
+        isPending: isLoadingUpdate
+    } = useMutation({
+        mutationFn: teams.update,
+        onSuccess: (data) => {
+            if (data?.message) {
+                return setMessage(data?.message.join(", "));
+            }
+
+            hCloseModal();
+            refetchReload();
+            setMessage('Команда успішно оновлена', 'success');
+        },
+    });
+
+    const gamesList = data?.id
+        ? [...(dataGame?.data?.filter((el: any) => el.id !== data?.gameId) || []), data.game]
+        : (dataGame?.data || []);
+
     const handleSubmit = (values: any) => {
-        console.log("Отримані дані з форми:", values);
+        const { players = 0, playersNew = 0 } = values;
+
+        if (data?.id) {
+            mutateUpdate({
+                ...values,
+                players: +players,
+                playersNew: +playersNew,
+                id: data?.id
+            });
+        } else {
+            mutateCreate({
+                ...values,
+                chatId: '-',
+                nickname: "-",
+                players: +players,
+                playersNew: +playersNew,
+                wish: values.wish || '-',
+                note: values.note || '-',
+                cityId: gamesList.find((el: any) => el.id == values.gameId).city.id
+            });
+        }
     };
+
+    useEffect(() => {
+        if (isModalOpen && data?.id) {
+            form.setFieldsValue(data);
+        }
+
+        if (!isModalOpen) {
+            form.resetFields();
+        }
+    }, [isModalOpen, data])
+
+    useEffect(() => {
+        if (isModalOpen)
+            refetch();
+    }, [isModalOpen]);
 
     return (
         <Modal
@@ -34,9 +131,9 @@ export const TeamEditModal = ({
             destroyOnClose
         >
             <Form
-                name="reset"
+                form={form}
+                name="team"
                 layout="vertical"
-                initialValues={data}
                 className="c-f-modal-reset"
                 onFinish={handleSubmit}
             >
@@ -73,7 +170,7 @@ export const TeamEditModal = ({
                 </Row>
 
                 <Row gutter={[20, 0]}>
-                    <Col xs={24}  xxl={24}>
+                    <Col xs={24} xxl={24}>
                         <Form.Item
                             label="Телефон"
                             name="phone"
@@ -93,7 +190,7 @@ export const TeamEditModal = ({
                     <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
                         <Form.Item
                             label="Гра"
-                            name="game"
+                            name="gameId"
                             rules={[
                                 {
                                     required: true,
@@ -105,87 +202,19 @@ export const TeamEditModal = ({
                                 showSearch
                                 placeholder="Нова"
                                 optionFilterProp="label"
+                                loading={isLoading}
                                 filterSort={(optionA, optionB) =>
-                                    (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                                    String(optionA?.label).toLowerCase().localeCompare(String(optionB?.label).toLowerCase())
                                 }
-                                options={[
-                                    {
-                                        value: 1,
-                                        label: `Організатор`,
-                                    },
-                                    {
-                                        value: 2,
-                                        label: `Модератор`,
-                                    }
-                                ]}
+                                options={gamesList?.map((el: { id: number, name: string }) => ({ label: el.name, value: el.id }))}
                             />
                         </Form.Item>
                     </Col>
 
                     <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
                         <Form.Item
-                            label="Місто"
-                            name="city"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Поле обов'язкове"
-                                }
-                            ]}
-                        >
-                            <Select
-                                showSearch
-                                placeholder="Львів"
-                                optionFilterProp="label"
-                                filterSort={(optionA, optionB) =>
-                                    (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-                                }
-                                options={[
-                                    {
-                                        value: 1,
-                                        label: `Організатор`,
-                                    },
-                                    {
-                                        value: 2,
-                                        label: `Модератор`,
-                                    }
-                                ]}
-                            />
-                        </Form.Item>
-                    </Col>
-                </Row>
-
-                <Row gutter={[20, 0]}>
-                    <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-                        <Form.Item
-                            label="Гравців"
-                            name="players"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Поле обов'язкове"
-                                }
-                            ]}
-                        >
-                            <Input placeholder="10" maxLength={3} />
-                        </Form.Item>
-                    </Col>
-
-                    <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-                        <Form.Item
-                            label="Гравців (нова)"
-                            name="playersNew"
-                        >
-                            <Input placeholder="10" maxLength={3} />
-                        </Form.Item>
-                    </Col>
-                </Row>
-
-                <Row gutter={[20, 0]}>
-                    <Col xs={24} xxl={24}>
-                        <Form.Item
-                            label="Статус"
-                            name="status"
+                            label="Активність"
+                            name="statusId"
                             rules={[
                                 {
                                     required: true,
@@ -200,20 +229,73 @@ export const TeamEditModal = ({
                                 filterSort={(optionA, optionB) =>
                                     (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
                                 }
-                                options={[
-                                    {
-                                        value: 1,
-                                        label: `Організатор`,
-                                    },
-                                    {
-                                        value: 2,
-                                        label: `Модератор`,
-                                    }
-                                ]}
+                                options={statuses?.map(el => ({ value: el.id, label: el.name })).filter(((el: { value: number }) => [1, 4, 5, 6].includes(el.value)))}
                             />
                         </Form.Item>
                     </Col>
                 </Row>
+
+                <Row gutter={[20, 0]}>
+                    <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+                        <Form.Item
+                            label="Гравців"
+                            name="players"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Поле обов'язкове"
+                                },
+                                {
+                                    type: 'number',
+                                    min: 4,
+                                    max: 10,
+                                    message: 'Кількість гравців має бути від 4 до 10',
+                                    transform: (value) => Number(value),
+                                },
+                            ]}
+                        >
+                            <InputNumber disabled={data?.id} placeholder="10" max={10} min={4} />
+                        </Form.Item>
+                    </Col>
+
+                    <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+                        <Form.Item
+                            label="Гравців (нова)"
+                            name="playersNew"
+                            rules={[
+                                {
+                                    type: 'number',
+                                    transform: (value) => (value ? Number(value) : undefined),
+                                    validator: (_, value) => {
+                                        if (value === undefined || value === null || value === '') {
+                                            return Promise.resolve();
+                                        }
+                                        if (value < 4 || value > 10) {
+                                            return Promise.reject(new Error('Кількість гравців має бути від 4 до 10'));
+                                        }
+                                        return Promise.resolve();
+                                    },
+                                },
+                            ]}
+                        >
+                            <InputNumber placeholder="8" max={10} min={4} />
+                        </Form.Item>
+                    </Col>
+                </Row>
+                {
+                    data?.id && (
+                        <Row gutter={[20, 0]}>
+                            <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+                                <Form.Item
+                                    label="Місто"
+                                    name="city"
+                                >
+                                    <Input disabled />
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                    )
+                }
 
                 <Row gutter={[20, 0]}>
                     <Col xs={24} xxl={24}>
@@ -237,16 +319,15 @@ export const TeamEditModal = ({
                     </Col>
                 </Row>
 
-
                 <Flex justify='center'>
-                <Form.Item className="c-wr-button-bot">
-                    <Button
-                        type="primary"
-                        htmlType="submit"
-                        loading={false}
-                        style={{width: '240px'}}
-                    >{!!data?.id ? 'Зберегти' : 'Додати'} </Button>
-                </Form.Item>
+                    <Form.Item className="c-wr-button-bot">
+                        <Button
+                            type="primary"
+                            htmlType="submit"
+                            loading={isLoadingCreate || isLoadingUpdate}
+                            style={{ width: '240px' }}
+                        >{!!data?.id ? 'Зберегти' : 'Додати'} </Button>
+                    </Form.Item>
                 </Flex>
             </Form>
         </Modal>

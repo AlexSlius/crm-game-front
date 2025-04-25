@@ -1,4 +1,11 @@
 import { Form, Input, Button, Modal } from 'antd';
+import { useMutation } from "@tanstack/react-query";
+
+import {
+    user
+} from '../../api';
+import { useNoteStore } from '../../store/note';
+import { useAppData } from '../../store/appData';
 
 export const ChangePasswordModal = ({
     isModalOpen = false,
@@ -7,6 +14,35 @@ export const ChangePasswordModal = ({
     isModalOpen: boolean,
     hCloseModal: Function,
 }) => {
+    const { user: useDataSerever } = useAppData();
+    const [form] = Form.useForm();
+    const { setMessage } = useNoteStore();
+
+    const { mutate, isPending } = useMutation({
+        mutationFn: user.updatePassword,
+        onSuccess: (data) => {
+            if (data?.message) {
+                return form.setFields([
+                    {
+                        name: "password",
+                        errors: [data.message.join(', ')],
+                    },
+                ]);
+            }
+
+            handleCloseModal();
+            setMessage('Пароль успішно змінено', 'success');
+        },
+        onError: (error: any) => {
+            form.setFields([
+                {
+                    name: "password",
+                    errors: ["Помилка при зміні паролю"],
+                },
+            ]);
+        },
+    });
+
     const handleCloseModal = () => {
         hCloseModal();
     }
@@ -25,14 +61,19 @@ export const ChangePasswordModal = ({
                 xxl: '448px',
             }}
             footer={null}
+            destroyOnClose
         >
             <Form
+                form={form}
                 name="reset"
                 layout="vertical"
                 initialValues={{
                     password: "",
                 }}
                 className="c-f-modal-reset"
+                onFinish={(data: { password: string }) => {
+                    mutate({ userId: useDataSerever.id, password: data.password })
+                }}
             >
                 <Form.Item
                     label="Новий пароль"
@@ -51,10 +92,10 @@ export const ChangePasswordModal = ({
                     <Button
                         type="primary"
                         htmlType="submit"
-                        loading={false}
+                        loading={isPending}
                         block>Змінити</Button>
                 </Form.Item>
             </Form>
-        </Modal>
+        </Modal >
     )
 }

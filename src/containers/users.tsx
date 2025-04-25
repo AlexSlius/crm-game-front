@@ -1,17 +1,18 @@
 import { Flex, Typography, Button, Table, Tag, Space } from 'antd';
 import { Fragment } from 'react/jsx-runtime';
-import { useCallback, useMemo, useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
+
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { EditOutlined } from "@ant-design/icons";
 import { UserEditModal } from '../components/modals/user.edit';
 
-const { Title } = Typography;
+import {
+    user,
+} from '../api';
+import { useNoteStore } from '../store/note';
 
-const data = [
-    { key: "1", id: 1, name: "Олександр", email: "test@gmail.com", city: { id: 1, name: '-' }, role: { id: 1, name: "Модератор" }, active: false },
-    { key: "2", id: 2, name: "Марина", email: "test@gmail.com", city: { id: 2, name: 'Львів' }, role: { id: 2, name: "Модератор" }, active: true },
-    { key: "3", id: 3, name: "Іван", email: "test@gmail.com", city: { id: 3, name: '-' }, role: { id: 3, name: "Модератор" }, active: true },
-    { key: "4", id: 4, name: "Анна", email: "test@gmail.com", city: { id: 4, name: 'Львів' }, role: { id: 4, name: "Модератор" }, active: true },
-];
+const { Title } = Typography;
 
 const defaultDataModal = {
     show: false,
@@ -19,21 +20,64 @@ const defaultDataModal = {
         id: null,
         name: '',
         email: '',
-        city: null,
-        role: null,
-        active: true,
+        cityId: null,
+        roleId: 2,
+        statusId: 1,
         password: null,
     }
 };
 
 export const UsersContainer = () => {
     const [dataModal, setDataModal] = useState(defaultDataModal);
+    const [dataUser, setDataUsers] = useState<any>(null);
 
-    const [loading, setLoading] = useState(false);
     const [pagination, setPagination] = useState({
         current: 1,
-        pageSize: 10,
+        pageSize: 20,
         total: 0,
+    });
+
+    const { setMessage } = useNoteStore();
+
+    const {
+        isLoading,
+        refetch,
+        data,
+    } = useQuery<any, Error>({
+        queryKey: ['users', pagination.current, pagination.pageSize],
+        queryFn: () => user.getUsers({ page: pagination.current, limit: pagination.pageSize }),
+    });
+
+    const {
+        mutate: mutateCreate,
+        isPending: isLoadingCreate
+    } = useMutation({
+        mutationFn: user.create,
+        onSuccess: (data) => {
+            if (data?.message) {
+                return setMessage(data?.message.join(", "));
+            }
+
+            refetch();
+            hCloseModal();
+            setMessage('Користувача успішно додано', 'success');
+        },
+    });
+
+    const {
+        mutate: mutateUpdate,
+        isPending: isLoadingUpdate
+    } = useMutation({
+        mutationFn: user.update,
+        onSuccess: (data) => {
+            if (data?.message) {
+                return setMessage(data?.message.join(", "));
+            }
+
+            refetch();
+            hCloseModal();
+            setMessage('Користувача успішно оновленно', 'success');
+        },
     });
 
     const handleEdit = useCallback((record: any) => {
@@ -43,9 +87,9 @@ export const UsersContainer = () => {
                 id: record.id,
                 name: record.name,
                 email: record.email,
-                city: record.city.id,
-                role: record.role.id,
-                active: record.active,
+                cityId: record.city.map((el: { id: number }) => el.id),
+                roleId: record.role.id,
+                statusId: record.status.id,
                 password: null,
             }
         });
@@ -60,6 +104,14 @@ export const UsersContainer = () => {
             title: "Id",
             dataIndex: "id",
             key: "id",
+            render: () => null,
+            width: 0,
+            className: "hidden_сol",
+        },
+        {
+            title: "№",
+            key: "index",
+            render: (_: any, __: any, index: number) => index + 1,
         },
         {
             title: "Ім'я",
@@ -75,7 +127,7 @@ export const UsersContainer = () => {
             title: "Місто",
             dataIndex: "city",
             key: "city",
-            render: (city: { id: number, name: string } | null) => city?.name || "-",
+            render: (cities: { id: number, name: string }[] | null) => cities?.length ? cities.map(el => el.name).join(", ") : "-",
         },
         {
             title: "Роль",
@@ -85,10 +137,9 @@ export const UsersContainer = () => {
         },
         {
             title: "Статус",
-            dataIndex: "active",
+            dataIndex: "status",
             key: "status",
-            render: (active: boolean) =>
-                active ? <Tag color="green">Активний</Tag> : <Tag color="red">Неактивний</Tag>,
+            render: (status: any) => (<Tag color={status?.color}>{status?.name}</Tag>),
         },
         {
             title: "Дії",
@@ -106,19 +157,36 @@ export const UsersContainer = () => {
         },
     ], [handleEdit]);
 
+    useEffect(() => {
+        if (!isLoading)
+            setDataUsers(data);
+    }, [data, isLoading]);
+
     return (
         <Fragment>
             <Flex justify='space-between' gap={14}>
                 <Title level={4} className='c-norm-title'>Користувачі</Title>
-                <Button size='small'  className='mob-btn-stan-none' type="primary" onClick={() => setDataModal((prev) => ({...prev, show: true}))}>+<span className='mob-btn-stan-none_span'>Додати</span></Button>
+                <Button size='small' className='mob-btn-stan-none' type="primary" onClick={() => setDataModal((prev) => ({ ...prev, show: true }))}>+<span className='mob-btn-stan-none_span'>Додати</span></Button>
             </Flex>
             <Table
                 className='c-table-mt-40'
                 columns={columns}
-                dataSource={data}
-                pagination={pagination}
+                dataSource={dataUser?.data?.length ? dataUser.data : []}
+                pagination={{
+                    ...pagination,
+                    total: dataUser?.total || 0,
+                    showSizeChanger: true,
+                }}
+                onChange={(paginationData) => {
+                    setPagination({
+                        current: paginationData.current || 1,
+                        pageSize: paginationData.pageSize || 10,
+                        total: dataUser?.total || 0,
+                    });
+                }}
                 size='small'
-                loading={loading}
+                rowKey="id"
+                loading={isLoading}
                 scroll={{ x: 1000 }}
                 style={{ maxWidth: 1000 }}
                 onRow={(record) => ({
@@ -131,7 +199,9 @@ export const UsersContainer = () => {
                 isModalOpen={dataModal.show}
                 hCloseModal={hCloseModal}
                 data={dataModal.data}
-                setDataModal={setDataModal}
+                isLoadBtn={isLoadingCreate || isLoadingUpdate}
+                mutateCreate={mutateCreate}
+                mutateUpdate={mutateUpdate}
             />
         </Fragment>
     )

@@ -1,4 +1,13 @@
 import { Button, Typography, Flex, Modal } from 'antd';
+import { useMutation } from '@tanstack/react-query';
+
+import {
+    auth
+} from '../../api';
+import { useNoteStore } from '../../store/note';
+
+import CONSTANTS from "../../constants/routers.json";
+
 
 const { Title } = Typography;
 
@@ -13,6 +22,25 @@ export const ConfirmationlogoutModal = ({
     isModalOpen: boolean;
     hCloseModal: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }) => {
+    const { setMessage } = useNoteStore();
+
+    const { mutate } = useMutation({
+        mutationFn: auth.logout,
+        onSuccess: (data) => {
+            if (data?.message) {
+                return setMessage(data.message.join(", "));
+            }
+
+            if (!!data?.status) {
+                localStorage.removeItem('token');
+                window.location.href = CONSTANTS.auth;
+            }
+        },
+    });
+
+    const handleExit = () => {
+        mutate();
+    }
 
     return (
         <Modal
@@ -28,6 +56,7 @@ export const ConfirmationlogoutModal = ({
                 xxl: '400px',
             }}
             footer={null}
+            destroyOnClose
         >
             {
                 !!desc && <Title level={4} className='c-t-c'>{desc}</Title>
@@ -37,6 +66,7 @@ export const ConfirmationlogoutModal = ({
                 <Button
                     type="primary"
                     loading={false}
+                    onClick={handleExit}
                 >Так</Button>
             </Flex>
         </Modal>

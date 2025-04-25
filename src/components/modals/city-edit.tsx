@@ -1,18 +1,41 @@
-import { Form, Input, Button, Modal, Select, Radio } from 'antd';
+import { Form, Input, Button, Modal, Select } from 'antd';
+import { useMutation } from '@tanstack/react-query';
+
+import { useAppData } from '../../store/appData';
+import {
+    timeZona
+} from "../../api";
 
 export const CityEditModal = ({
     isModalOpen = false,
     data = {},
+    isLoadBtn = false,
     hCloseModal = () => { },
-    setDataModal = () => { },
+    mutateCreate = () => { },
+    mutateUpdate = () => { },
 }: {
     isModalOpen: boolean,
     hCloseModal: (e: React.MouseEvent<HTMLButtonElement>) => void;
-    setDataModal: Function,
     data: any;
+    isLoadBtn: boolean;
+    mutateCreate: any;
+    mutateUpdate: any;
 }) => {
+    const { statuses } = useAppData();
+
+    const { mutate: fetchTimeZona, data: citiesZona, isPending } = useMutation({
+        mutationFn: (search: string) => timeZona.getTimeZones({ search }),
+    });
+
     const handleSubmit = (values: any) => {
-        console.log("Отримані дані з форми:", values);
+        if (!data?.id) {
+            mutateCreate(values);
+        } else {
+            mutateUpdate({
+                id: data.id,
+                ...values
+            });
+        }
     };
 
     return (
@@ -53,7 +76,7 @@ export const CityEditModal = ({
 
                 <Form.Item
                     label="Часовий пояс"
-                    name="timeZona"
+                    name="timeZoneId"
                     rules={[
                         {
                             required: true,
@@ -63,29 +86,27 @@ export const CityEditModal = ({
                 >
                     <Select
                         showSearch
-                        placeholder="UTC-0"
+                        loading={isPending}
+                        placeholder="Часовий пояс"
                         optionFilterProp="label"
-                        filterSort={(optionA, optionB) =>
-                            (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-                        }
-                        options={[...new Array(30)].map((_, index) => (
-                            {
-                                value: index,
-                                label: `UTC-${index}`,
-                            }
-                        ))}
+                        filterOption={false}
+                        onSearch={fetchTimeZona}
+                        options={(!data?.id ? citiesZona : (citiesZona?.length ? citiesZona : [data?.timeZone]))?.map((el: { id: number, name: string }) => ({ value: el.id, label: el.name }))}
                     />
                 </Form.Item>
 
                 <Form.Item
                     label="Активність"
-                    name="active"
+                    name="statusId"
                 >
-                    <Radio.Group
-                        options={[
-                            { value: false, label: "Ні" },
-                            { value: true, label: "Так" },
-                        ]}
+                    <Select
+                        showSearch
+                        placeholder="Активний"
+                        optionFilterProp="label"
+                        filterSort={(optionA, optionB) =>
+                            (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                        }
+                        options={statuses?.map(el => ({ value: el.id, label: el.name })).filter(((el: { value: number }) => [1, 2, 4].includes(el.value)))}
                     />
                 </Form.Item>
 
@@ -93,7 +114,7 @@ export const CityEditModal = ({
                     <Button
                         type="primary"
                         htmlType="submit"
-                        loading={false}
+                        loading={isLoadBtn}
                         block>{!!data?.id ? 'Зберегти' : 'Додати'} </Button>
                 </Form.Item>
             </Form>
