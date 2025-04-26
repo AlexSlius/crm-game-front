@@ -26,24 +26,24 @@ export const HomeContainer = () => {
     } = useQuery<any, Error>({
         queryKey: ['questionTotal'],
         queryFn: () => questions.tatalActive(),
-});
+    });
 
-return (
-    <Fragment>
-        <Row gutter={[24, 24]}>
-            <Col xs={24} sm={24} md={12} lg={6}>
-                <Card title={`Активних ігор`} variant="borderless" className='c-card-item'>
-                    <div className='wr-title-game-quant'>
-                        {data?.data?.map((el: any) => el.statusId === 1).length}
-                    </div>
-                </Card>
-            </Col>
-            <Col xs={24} sm={24} md={12} lg={6}>
-                <Card title={`Нових запитань`} variant="borderless" className='c-card-item'>
-                    <div className='wr-title-game-quant'>{dataQuestion?.data?.total || 0}</div>
-                </Card>
-            </Col>
-        </Row>
-    </Fragment>
-)
+    return (
+        <Fragment>
+            <Row gutter={[24, 24]}>
+                <Col xs={24} sm={24} md={12} lg={6}>
+                    <Card title={`Активних ігор`} variant="borderless" className='c-card-item'>
+                        <div className='wr-title-game-quant'>
+                            {data?.data?.map((el: any) => el.statusId === 1).length}
+                        </div>
+                    </Card>
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={6}>
+                    <Card title={`Нових запитань`} variant="borderless" className='c-card-item'>
+                        <div className='wr-title-game-quant'>{dataQuestion?.data?.questioLength || 0}</div>
+                    </Card>
+                </Col>
+            </Row>
+        </Fragment>
+    )
 }

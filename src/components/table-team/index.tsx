@@ -135,7 +135,7 @@ export const TableTeam = ({
                 </Space>
             ),
         },
-    ], []);
+    ], [handleOpenEdit]);
 
     useEffect(() => {
         if (data) {
