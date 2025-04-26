@@ -15,4 +15,8 @@ export class Questions {
     getQuestions = ({ page = 1, limit = 30, status = 9 }: { page?: number, limit?: number, status: number }) => {
         return api.get(`${this.baseUrl}?page=${page}&limit=${limit}&status=${status}`);
     }
+
+    tatalActive() {
+        return api.get(`${this.baseUrl}/total-active`);
+    }
 }

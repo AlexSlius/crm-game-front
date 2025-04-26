@@ -1,10 +1,8 @@
 import { Form, Input, Button, Modal, Select } from 'antd';
-import { useMutation } from '@tanstack/react-query';
 import { useEffect } from "react";
 
 import { useAppData } from '../../store/appData';
 import { useGetCitiesNow } from '../../hooks/useGetCitiesNow';
-import { timeZona } from "../../api";
 
 const { TextArea } = Input;
 
@@ -39,26 +37,21 @@ export const QuestionEditModal = ({
         } else {
             mutateUpdate({
                 id: data.id,
-                ...values
+                ...values,
             });
         }
     };
 
     useEffect(() => {
+        if (isModalOpen) {
+            form.setFieldsValue(data);
+        }
+
         if (isModalOpen && user?.role?.id === 1) {
             fetchCities({});
-        }
-
-        if (!isModalOpen) {
-            form.resetFields();
-        }
-    }, [isModalOpen, user]);
-
-    useEffect(() => {
-        if (user?.role?.id !== 1) {
             form.setFieldValue('cityId', user?.city[0]?.id);
         }
-    }, [user]);
+    }, [isModalOpen, form, user]);
 
     return (
         <Modal
@@ -80,7 +73,6 @@ export const QuestionEditModal = ({
                 form={form}
                 name="reset"
                 layout="vertical"
-                initialValues={data}
                 className="c-f-modal-reset"
                 onFinish={handleSubmit}
             >

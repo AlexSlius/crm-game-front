@@ -15,21 +15,32 @@ export const ResetPassword = ({
 }) => {
     const { setMessage } = useNoteStore();
 
-    // const { mutate } = useMutation({
-    //     mutationFn: user.updatePassword,
-    //     onSuccess: (data) => {
-    //         console.log()
-    //     },
-    // });
+    const {
+        mutate,
+        isPending,
+    } = useMutation({
+        mutationFn: user.forgotPassword,
+        onSuccess: (data) => {
+            if (data?.data?.status) {
+                setMessage('Пароль надіслано на пошту', 'success');
+                hCloseModal();
+            } else {
+                setMessage('Не вийшло надіслати пароль, перевірь пошту');
+            }
+        },
+    });
 
     const handleCloseModal = () => {
         hCloseModal();
     }
 
+    const handleSubmit = (values: any) => {
+        mutate(values.email);
+    };
 
     return (
         <Modal
-            title="Нагадати пароль"
+            title="Забули пароль ?"
             open={isModalOpen}
             onCancel={handleCloseModal}
             width={{
@@ -41,6 +52,7 @@ export const ResetPassword = ({
                 xxl: '448px',
             }}
             footer={null}
+            destroyOnClose
         >
             <Form
                 name="reset"
@@ -49,6 +61,7 @@ export const ResetPassword = ({
                     email: "",
                 }}
                 className="c-f-modal-reset"
+                onFinish={handleSubmit}
             >
                 <Form.Item
                     label="Пошта"
@@ -70,7 +83,7 @@ export const ResetPassword = ({
                     <Button
                         type="primary"
                         htmlType="submit"
-                        loading={false}
+                        loading={isPending}
                         block>Отримати пароль</Button>
                 </Form.Item>
             </Form>

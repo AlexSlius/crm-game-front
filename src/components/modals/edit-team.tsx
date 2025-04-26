@@ -94,7 +94,7 @@ export const TeamEditModal = ({
                 playersNew: +playersNew,
                 wish: values.wish || '-',
                 note: values.note || '-',
-                cityId: gamesList.find((el: any) => el.id == values.gameId).city.id
+                cityId: gamesList.find((el: any) => el.id === values.gameId).city.id
             });
         }
     };
@@ -103,11 +103,7 @@ export const TeamEditModal = ({
         if (isModalOpen && data?.id) {
             form.setFieldsValue(data);
         }
-
-        if (!isModalOpen) {
-            form.resetFields();
-        }
-    }, [isModalOpen, data])
+    }, [isModalOpen, data, form])
 
     useEffect(() => {
         if (isModalOpen)

@@ -23,4 +23,8 @@ export class User {
     updatePassword = ({ userId, password }: { userId: number, password: string }) => {
         return api.patch(`${this.baseUrl}update-password/${userId}`, { password });
     }
+
+    forgotPassword = (email: string) => {
+        return api.post(`${this.baseUrl}forgot-password`, { email });
+    }
 }

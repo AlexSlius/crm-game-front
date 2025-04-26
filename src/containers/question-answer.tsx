@@ -70,6 +70,8 @@ export const QuestionAnswerContainer = () => {
             show: true,
             data: {
                 ...record,
+                cityId: record.city.id,
+                statusId: record.status.id
             }
         });
     }, []);
@@ -90,8 +92,9 @@ export const QuestionAnswerContainer = () => {
         },
         {
             title: "Username",
-            dataIndex: "user",
-            key: "user",
+            dataIndex: "nickname",
+            key: "nickname",
+            render: (nickname: string) => nickname || '-'
         },
         {
             title: "Автор Ім'я",
@@ -111,8 +114,8 @@ export const QuestionAnswerContainer = () => {
         },
         {
             title: "Назва команди",
-            dataIndex: "nameTeam",
-            key: "nameTeam",
+            dataIndex: "team",
+            key: "team",
         },
         {
             title: "Запитання",
