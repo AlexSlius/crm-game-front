@@ -2,10 +2,6 @@ import { Alert } from 'antd';
 import { useNoteStore } from '../../store/note';
 import { useEffect } from 'react';
 
-const onClose = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    console.log(e, 'I was closed.');
-};
-
 export const Note: React.FC = () => {
     const { message, type, cleanMessage } = useNoteStore();
 

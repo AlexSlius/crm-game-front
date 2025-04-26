@@ -19,7 +19,7 @@ export const AutorizationContainer = () => {
 
     const navigate = useNavigate();
 
-    const { mutate, isPending, isError, error } = useMutation({
+    const { mutate, isPending } = useMutation({
         mutationFn: auth.login,
         onSuccess: (data) => {
 

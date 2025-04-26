@@ -102,7 +102,7 @@ export const ListTeamModal = ({
                 />
                 <div>
                     {
-                        <div style={{ display: (activeKey == "registration" ? 'block' : 'none') }}>
+                        <div style={{ display: (activeKey === "registration" ? 'block' : 'none') }}>
                             <TableTeam
                                 filter={{
                                     statuses: [1],
@@ -120,7 +120,7 @@ export const ListTeamModal = ({
                     }
 
                     {
-                        <div style={{ display: (activeKey == "rezerv" ? 'block' : 'none') }}>
+                        <div style={{ display: (activeKey === "rezerv" ? 'block' : 'none') }}>
                             <TableTeam
                                 filter={{
                                     statuses: [6],
@@ -138,7 +138,7 @@ export const ListTeamModal = ({
                     }
 
                     {
-                        <div style={{ display: (activeKey == "canceled" ? 'block' : 'none') }}>
+                        <div style={{ display: (activeKey === "canceled" ? 'block' : 'none') }}>
                             <TableTeam
                                 filter={{
                                     statuses: [5],

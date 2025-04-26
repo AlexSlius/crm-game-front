@@ -41,7 +41,7 @@ export const MainLayout = () => {
     useEffect(() => {
         if (isMobile)
             setCollapsed(false)
-    }, [location.pathname]);
+    }, [location.pathname, isMobile]);
 
     return (
         <Fragment>
