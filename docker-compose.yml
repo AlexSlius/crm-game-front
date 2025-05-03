@@ -6,8 +6,9 @@ services:
     volumes:
       - crm-build:/app/build
 
-crm-build:
-  external: false 
+volumes:
+  crm-build:
+    external: false
 
 networks:
   nginx:
