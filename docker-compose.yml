@@ -3,6 +3,11 @@ services:
     build: .
     expose:
       - "3000"
+    volumes:
+      - crm-build:/app/build
+
+crm-build:
+  external: false 
 
 volumes:
   pgdata:
