@@ -1,7 +1,10 @@
 services:
   crm:
     build: .
-    networks:
-      - nginx_default
     expose:
       - "3000"
+
+volumes:
+  pgdata:
+    name: nginx_default
+    external: true
