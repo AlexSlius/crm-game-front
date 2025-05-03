@@ -1,0 +1,7 @@
+services:
+  crm:
+    build: .
+    networks:
+      - internal-net
+    expose:
+      - "3000"
