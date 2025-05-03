@@ -121,8 +121,7 @@ export const QuestionAnswerContainer = () => {
             title: "Запитання",
             dataIndex: "question",
             key: "question",
-            render: (text: string) =>
-                text.length > 50 ? `${text.slice(0, 50)}...` : text,
+            render: (text: string) => text.length > 50 ? `${text.slice(0, 50)}...` : text,
         },
         {
             title: "Відповіді",

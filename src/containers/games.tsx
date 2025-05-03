@@ -172,6 +172,7 @@ export const GamseContainer = () => {
             title: "Опис",
             dataIndex: "description",
             key: "description",
+            render: (des: string) => des.length > 50 ? `${des.slice(0, 50)}...` : des
         },
         {
             title: "Статус",
