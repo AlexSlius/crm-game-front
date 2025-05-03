@@ -2,6 +2,6 @@ services:
   crm:
     build: .
     networks:
-      - nginx-default
+      - nginx_default
     expose:
       - "3000"
