@@ -9,8 +9,7 @@ services:
 crm-build:
   external: false 
 
-volumes:
-  pgdata:
+networks:
+  nginx:
     name: nginx_default
     external: true
-
