@@ -3,3 +3,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    networks:
+      nginx:
+
+networks:
+  nginx:
+    name: nginx_default
+    external: true
