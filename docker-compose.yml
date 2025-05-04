@@ -1,14 +1,10 @@
 services:
   crm:
-    build: .
-    expose:
-      - "3000"
-    volumes:
-      - crm-build:/app/build
-
-volumes:
-  crm-build:
-    external: false
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
 
 networks:
   nginx:
