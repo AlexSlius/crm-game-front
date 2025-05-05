@@ -106,8 +106,11 @@ export const TeamEditModal = ({
     }, [isModalOpen, data, form])
 
     useEffect(() => {
-        if (isModalOpen)
+        if (isModalOpen) {
             refetch();
+        } else {
+            form.resetFields();
+        }
     }, [isModalOpen]);
 
     return (

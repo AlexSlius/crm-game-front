@@ -24,6 +24,7 @@ export const GameEditModal = ({
     data: any;
     refetchReload: any;
 }) => {
+    const [charCount, setCharCount] = useState(0);
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const [form] = Form.useForm();
     const isPlaces = useWatch('isPlaces', form);
@@ -37,6 +38,10 @@ export const GameEditModal = ({
     const debouncedSearchCity = (text: any) => {
         fetchCities({ search: text });
     }
+
+    const handleCharCount = (e: any) => {
+        setCharCount(e.target.value.length);
+    };
 
     const {
         mutate: mutateCreate,
@@ -303,6 +308,9 @@ export const GameEditModal = ({
                         <Form.Item
                             label="Опис"
                             name="description"
+                            hasFeedback
+                            validateStatus={charCount === 1023 ? "error" : ""}
+                            help={charCount === 1023 ? "Максимальна довжина досягнута." : ""}
                             rules={[
                                 {
                                     required: true,
@@ -310,13 +318,24 @@ export const GameEditModal = ({
                                 },
                                 {
                                     max: 1023,
-                                    message: "Максимальна довжина — 1023 символи"
-                                }
+                                    message: "Максимальна довжина — 1023 символи",
+                                },
+                                {
+                                    validator: (_, value) => {
+                                        if (charCount === 1023) {
+                                            return Promise.reject("Максимальна довжина досягнута.");
+                                        }
+                                        
+                                        return Promise.resolve();
+                                    },
+                                },
                             ]}
                         >
                             <TextArea
                                 rows={10}
                                 maxLength={1023}
+                                onChange={handleCharCount}
+                                value={charCount}
                                 showCount
                             />
                         </Form.Item>

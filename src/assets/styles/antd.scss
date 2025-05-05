@@ -188,6 +188,14 @@
     display: none;
 }
 
+.new_player {
+    font-weight: 700;
+    padding: 4px 8px;
+    border: 2px solid orange;
+    background: orange;
+    border-radius: 6px;
+}
+
 @media(max-width: 991px) {
     .mob-btn-stan-none {
         .mob-btn-stan-none_span {

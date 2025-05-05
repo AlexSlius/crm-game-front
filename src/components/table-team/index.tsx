@@ -90,6 +90,7 @@ export const TableTeam = ({
             title: "Кіл. уч. (нова)",
             dataIndex: "playersNew",
             key: "playersNew",
+            render: (playersNew: number) => <span className={`${playersNew > 0 ? "new_player" : ""}`}>{playersNew}</span>
         },
         {
             title: "Місто",
