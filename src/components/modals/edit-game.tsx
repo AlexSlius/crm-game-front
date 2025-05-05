@@ -307,12 +307,16 @@ export const GameEditModal = ({
                                 {
                                     required: true,
                                     message: "Поле обов'язкове"
+                                },
+                                {
+                                    max: 1023,
+                                    message: "Максимальна довжина — 1023 символи"
                                 }
                             ]}
                         >
                             <TextArea
                                 rows={10}
-                                maxLength={3600}
+                                maxLength={1023}
                                 showCount
                             />
                         </Form.Item>
