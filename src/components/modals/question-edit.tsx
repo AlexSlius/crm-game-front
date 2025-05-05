@@ -47,9 +47,13 @@ export const QuestionEditModal = ({
             form.setFieldsValue(data);
         }
 
-        if (isModalOpen && user?.role?.id === 1) {
-            fetchCities({});
+        if (isModalOpen && userModer && !data?.id) {
+
             form.setFieldValue('cityId', user?.city[0]?.id);
+        }
+
+        if (isModalOpen && userModer) {
+            fetchCities({});
         }
     }, [isModalOpen, form, user]);
 
