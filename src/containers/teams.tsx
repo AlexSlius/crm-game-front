@@ -202,7 +202,7 @@ export const TeamsContainer = () => {
                     filterSort={(optionA, optionB) =>
                         (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
                     }
-                    options={statuses?.map((el: any) => ({ label: el.name, value: el.id }))}
+                    options={statuses?.filter((status: { id: number }) => [1, 6, 4, 5].includes(status.id)).map((el: any) => ({ label: el.name, value: el.id }))}
                 />
 
                 <RangePicker

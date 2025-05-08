@@ -39,10 +39,12 @@ export const ImageUploadFormItem = ({ dataForm, fileList, setFileList, }: { data
 
     const customUpload = ({ file, onSuccess, onError }: any) => {
         if ((file.size / 1024 / 1024) > 9) {
+            setFileList([]);
             return setMessage('Розмір картинки має бути не більше 9Мб');
         }
 
         if (!allowedTypes.includes(file.type)) {
+            setFileList([]);
             return setMessage('Тільки зображення формату JPG, JPEG або PNG');
         }
 

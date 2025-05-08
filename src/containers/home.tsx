@@ -1,13 +1,13 @@
 import { Col, Row, Card } from 'antd';
 import { Fragment } from "react/jsx-runtime";
 import { useQuery } from '@tanstack/react-query';
+import { useNumberOfQuestionStore } from '../store/number-of-question';
 
-import {
-    games,
-    questions,
-} from '../api';
+import { games } from '../api';
 
 export const HomeContainer = () => {
+    const { quntity } = useNumberOfQuestionStore();
+
     const params = new URLSearchParams();
 
     params.append('statuses', '1');
@@ -19,13 +19,6 @@ export const HomeContainer = () => {
     } = useQuery<any, Error>({
         queryKey: ['games'],
         queryFn: () => games.getGames(`?${params.toString()}`),
-    });
-
-    const {
-        data: dataQuestion,
-    } = useQuery<any, Error>({
-        queryKey: ['questionTotal'],
-        queryFn: () => questions.tatalActive(),
     });
 
     return (
@@ -40,7 +33,7 @@ export const HomeContainer = () => {
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={6}>
                     <Card title={`Нових запитань`} variant="borderless" className='c-card-item'>
-                        <div className='wr-title-game-quant'>{dataQuestion?.data?.questioLength || 0}</div>
+                        <div className='wr-title-game-quant'>{quntity}</div>
                     </Card>
                 </Col>
             </Row>

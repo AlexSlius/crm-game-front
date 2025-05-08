@@ -1,5 +1,6 @@
 import { Fragment, useState, useEffect } from 'react';
 import { Outlet } from "react-router-dom";
+import { useQuery } from '@tanstack/react-query';
 import { MenuFoldOutlined, MenuUnfoldOutlined, } from '@ant-design/icons';
 import { Button, Layout, theme, Flex, Drawer, Grid } from 'antd';
 import { useLocation } from 'react-router-dom'
@@ -12,6 +13,8 @@ import { useModalLogoutStore } from '../store/modal-logout';
 import { ChangePasswordModal } from '../components/modals/change-password';
 import { useModalChangePasswordStore } from '../store/moda-change-password';
 import { useAppData } from '../store/appData';
+import { questions } from '../api';
+import { useNumberOfQuestionStore } from '../store/number-of-question';
 
 const { Header, Sider, Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -21,6 +24,7 @@ export const MainLayout = () => {
     const { closeModal, isOpenModal } = useModalLogoutStore();
     const { isOpenModalChange, closeModalChange } = useModalChangePasswordStore();
     const { user } = useAppData();
+    const {quntity, record} = useNumberOfQuestionStore();
 
     const location = useLocation()
     const screens = useBreakpoint();
@@ -37,6 +41,17 @@ export const MainLayout = () => {
     const {
         token: { borderRadiusLG },
     } = theme.useToken();
+
+    const {
+        data: dataQuestion,
+    } = useQuery<any, Error>({
+        queryKey: ['questionTotal'],
+        queryFn: () => questions.tatalActive(),
+    });
+
+    useEffect(() => {
+        record(dataQuestion?.data?.questioLength || 0);
+    }, [dataQuestion]);
 
     useEffect(() => {
         if (isMobile)
@@ -55,7 +70,10 @@ export const MainLayout = () => {
                             width={siderWidth}
                             theme="dark"
                         >
-                            <MenuMain dataUser={user} />
+                            <MenuMain
+                                dataUser={user}
+                                quantityQuestion={quntity}
+                            />
                         </Sider>
                     )
                 }
@@ -69,7 +87,10 @@ export const MainLayout = () => {
                             open={collapsed}
                             width={250}
                         >
-                            <MenuMain dataUser={user} />
+                            <MenuMain
+                                dataUser={user}
+                                quantityQuestion={quntity}
+                            />
                         </Drawer>
                     )
                 }

@@ -1,5 +1,5 @@
 import { Form, Input, Button, Modal, Select, Row, Col, Flex, InputNumber } from 'antd';
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, useMutation } from '@tanstack/react-query';
 
 import { useAppData } from '../../store/appData';
@@ -20,6 +20,7 @@ export const TeamEditModal = ({
     data: any;
 }) => {
     const [form] = Form.useForm();
+    const [phone, setPhone] = useState('');
     const { setMessage } = useNoteStore();
     const { statuses } = useAppData();
 
@@ -28,6 +29,14 @@ export const TeamEditModal = ({
     params.append('statuses', '1');
     params.append('statuses', '3');
     params.append('limit', '100');
+
+    const handlePhoneChange = (e: any) => {
+        const value = e.target.value;
+
+        if (/^\+\d*$/.test(value)) {
+            setPhone(value);
+        }
+    };
 
     const {
         isLoading,
@@ -177,10 +186,18 @@ export const TeamEditModal = ({
                                 {
                                     required: true,
                                     message: "Поле обов'язкове"
-                                }
+                                },
+                                {
+                                    pattern: /^\+\d{10,14}$/,
+                                    message: "Номер має починатись з + і містити лише цифри (10–14 цифр)",
+                                },
                             ]}
                         >
-                            <Input placeholder="+3806612547.." />
+                            <Input
+                                placeholder="+3806612547.."
+                                value={phone}
+                                onChange={handlePhoneChange}
+                            />
                         </Form.Item>
                     </Col>
                 </Row>

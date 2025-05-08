@@ -14,9 +14,11 @@ import {
 import CONSTANTS from "../../constants/routers.json";
 
 export const MenuMain = ({
-    dataUser
+    dataUser,
+    quantityQuestion=0
 }: {
-    dataUser: any
+    dataUser: any;
+    quantityQuestion:number;
 }) => {
     const [openKeys, setOpenKeys] = useState<string[]>([]);
     const location = useLocation();
@@ -93,7 +95,7 @@ export const MenuMain = ({
                     {
                         key: CONSTANTS.question,
                         icon: <QuestionCircleOutlined />,
-                        label: <Link to={CONSTANTS.question}>Питання</Link>,
+                        label: <Link to={CONSTANTS.question}>Питання <span>{quantityQuestion}</span></Link>,
                     },
                 ].filter(Boolean)}
             />

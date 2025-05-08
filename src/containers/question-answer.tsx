@@ -8,6 +8,7 @@ import { questions } from '../api';
 import { useNoteStore } from '../store/note';
 import { defaultDataModalQuestion } from '../constants/default-data';
 import { QuestionEditModal } from '../components/modals/question-edit';
+import { useNumberOfQuestionStore } from '../store/number-of-question';
 
 const { Title } = Typography;
 
@@ -21,6 +22,7 @@ export const QuestionAnswerContainer = () => {
         pageSize: 20,
         total: 0,
     });
+    const { record } = useNumberOfQuestionStore();
 
     const { setMessage } = useNoteStore();
 
@@ -164,6 +166,7 @@ export const QuestionAnswerContainer = () => {
 
     useEffect(() => {
         setDataTable(data);
+        record(data?.totalActive || 0)
     }, [data]);
 
     return (

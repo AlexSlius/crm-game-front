@@ -259,7 +259,7 @@ export const GamseContainer = () => {
                         filterSort={(optionA, optionB) =>
                             (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
                         }
-                        options={statuses?.map((el: any) => ({ label: el.name, value: el.id }))}
+                        options={statuses?.filter((status: { id: number }) => [1, 7, 3, 5].includes(status.id)).map((el: any) => ({ label: el.name, value: el.id }))}
                     />
 
                     <RangePicker
