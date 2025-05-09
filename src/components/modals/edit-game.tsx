@@ -118,7 +118,6 @@ export const GameEditModal = ({
                 ]);
             }
         } else {
-            form.resetFields();
             setFileList([]);
         }
     }, [isModalOpen, data])

@@ -75,6 +75,7 @@ export const ImageUploadFormItem = ({ dataForm, fileList, setFileList, }: { data
             <Form.Item
                 label="Картинка"
                 name="image"
+                style={{ marginBottom: 5 }}
                 rules={[{ required: true, message: 'Оберіть картинку' }]}
             >
                 <Upload
@@ -89,6 +90,7 @@ export const ImageUploadFormItem = ({ dataForm, fileList, setFileList, }: { data
                     {fileList.length >= 1 ? null : uploadButton}
                 </Upload>
             </Form.Item>
+            <p style={{ margin: 0, color: "#ff3d00" }}>Не більше 9 мб.</p>
 
             {isPending && <Progress percent={progress} />}
         </div>

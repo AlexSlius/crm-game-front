@@ -5,6 +5,7 @@ import { useAppData } from '../../store/appData';
 import {
     timeZona
 } from "../../api";
+import { useEffect } from 'react';
 
 export const CityEditModal = ({
     isModalOpen = false,
@@ -37,6 +38,11 @@ export const CityEditModal = ({
             });
         }
     };
+    useEffect(() => {
+        if (isModalOpen) {
+            fetchTimeZona('Europe/Kiev');
+        }
+    }, [isModalOpen]);
 
     return (
         <Modal
@@ -75,7 +81,7 @@ export const CityEditModal = ({
                 </Form.Item>
 
                 <Form.Item
-                    label="Часовий пояс"
+                    label="Часовий пояс (пошук по назві)"
                     name="timeZoneId"
                     rules={[
                         {

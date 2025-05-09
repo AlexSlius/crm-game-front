@@ -18,9 +18,9 @@ const defaultDataModal = {
     data: {
         id: null,
         name: '',
-        timeZoneId: null,
+        timeZoneId: 291,
         statusId: 1,
-        timeZone: null
+        timeZone: 'Europe/Kiev'
     }
 };
 
