@@ -1,9 +1,7 @@
 import { Form, Input, Button, Modal } from 'antd';
 import { useMutation } from "@tanstack/react-query";
 
-import {
-    user
-} from '../../api';
+import { user } from '../../api';
 import { useNoteStore } from '../../store/note';
 import { useAppData } from '../../store/appData';
 

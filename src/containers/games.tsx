@@ -1,7 +1,7 @@
 import { Flex, Typography, Button, Select, Table, Tag, Space, Input, DatePicker } from 'antd';
 import { Fragment } from 'react/jsx-runtime';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { EditOutlined, TeamOutlined, CloseOutlined } from "@ant-design/icons";
+import { EditOutlined, TeamOutlined, CloseOutlined, LinkOutlined } from "@ant-design/icons";
 import { useQuery } from '@tanstack/react-query';
 
 import { GameEditModal } from '../components/modals/edit-game';
@@ -12,6 +12,8 @@ import { defaultDataModalGame } from "../constants/default-data";
 import { useAppData } from '../store/appData';
 import { useGetCitiesNow } from '../hooks/useGetCitiesNow';
 import { getQueryStringGame } from '../helpers/get-query-games';
+import { useNoteStore } from '../store/note';
+import config from "../config.json";
 
 const { Title } = Typography;
 const { Search } = Input;
@@ -40,9 +42,20 @@ export const GamseContainer = () => {
         dateTo: null,
     });
 
+    const { setMessage } = useNoteStore();
+
     const { fetchCities, citiesData, isLoadingCity } = useGetCitiesNow();
     const { statuses, user } = useAppData();
     const userModer = user?.role?.id === 1;
+
+    const handleCopyToClipboard = async (data: any) => {
+        try {
+            await navigator.clipboard.writeText(`${config.NAME_BOT}?start=city-${data.cityId}`);
+            setMessage('Посилання скопійовано', 'success');
+        } catch (err) {
+            setMessage('Посилання не скопійовано');
+        }
+    };
 
     const {
         isLoading,
@@ -186,6 +199,14 @@ export const GamseContainer = () => {
             render: (_: any, record: any) => (
                 <Space>
                     <Space>
+                        <Button
+                            color="purple"
+                            variant="solid"
+                            icon={<LinkOutlined />}
+                            size='small'
+                            title="Скопіювати посилання бота на місто/гру"
+                            onClick={() => handleCopyToClipboard(record)}
+                        ></Button>
                         <Button
                             color="cyan"
                             variant="solid"

@@ -2,12 +2,15 @@ import { Flex, Typography, Button, Progress, Space, Row, Col, Card } from 'antd'
 import { useState, useCallback } from 'react';
 import { Fragment } from 'react/jsx-runtime';
 import { useQuery } from '@tanstack/react-query';
-import { EditOutlined, TeamOutlined } from "@ant-design/icons";
+import { EditOutlined, TeamOutlined, LinkOutlined } from "@ant-design/icons";
 import { GameEditModal } from '../components/modals/edit-game';
 import { ListTeamModal } from '../components/modals/list-temas';
+import { useNoteStore } from '../store/note';
 import { games } from '../api';
 import { formattedDecoder, formattedGame } from '../helpers/format-data';
 import { defaultDataModalGame } from "../constants/default-data";
+
+import config from "../config.json";
 
 const { Title } = Typography;
 
@@ -22,10 +25,20 @@ export const GamsesActiveContainer = () => {
 
     const [dataModal, setDataModal] = useState(defaultDataModalGame);
     const [dataModalListTeam, setDataModalListTeam] = useState(defaultDataModalTemaList);
+    const { setMessage } = useNoteStore();
 
     params.append('statuses', '1');
     params.append('statuses', '3');
     params.append('limit', '100');
+
+    const handleCopyToClipboard = async (data: any) => {
+        try {
+            await navigator.clipboard.writeText(`${config.NAME_BOT}?start=city-${data.cityId}`);
+            setMessage('Посилання скопійовано', 'success');
+        } catch (err) {
+            setMessage('Посилання не скопійовано');
+        }
+    };
 
     const {
         refetch,
@@ -88,6 +101,14 @@ export const GamsesActiveContainer = () => {
                                     className='c-card-item'
                                     extra={
                                         <Space>
+                                            <Button
+                                                color="purple"
+                                                variant="solid"
+                                                icon={<LinkOutlined />}
+                                                size='small'
+                                                title="Скопіювати посилання бота на місто/гру"
+                                                onClick={() => handleCopyToClipboard(itemCard)}
+                                            ></Button>
                                             <Button
                                                 color="cyan"
                                                 variant="solid"

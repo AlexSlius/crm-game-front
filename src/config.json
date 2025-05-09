@@ -1,7 +1,4 @@
 {
-    "API": "https://crmapi.mindgame.ua/api/admin/"
-<<<<<<< HEAD
+    "API": "https://crmapi.mindgame.ua/api/admin/",
+    "NAME_BOT": "https://t.me/dev_gamve_registr_bot"
 }
-=======
-}
->>>>>>> c9266f8713c141b3c5e51d8362c6d31bd6dbaeff
