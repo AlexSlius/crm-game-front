@@ -20,7 +20,7 @@ const defaultDataModal = {
         id: null,
         name: '',
         email: '',
-        cityId: null,
+        cityId: [],
         roleId: 2,
         statusId: 1,
         password: null,
