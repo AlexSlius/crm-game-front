@@ -205,6 +205,20 @@
     border-radius: 6px;
 }
 
+.ant-card .ant-card-head-title {
+    overflow: visible !important;
+    white-space: wrap !important;
+    text-overflow: inherit !important;
+    padding-right: 14px !important;
+    font-size: 15px !important;
+}
+
+.ant-select-dropdown .ant-select-item-option-content {
+    overflow: visible !important;
+    white-space: wrap !important;
+    text-overflow: inherit !important;
+}
+
 @media(max-width: 991px) {
     .mob-btn-stan-none {
         .mob-btn-stan-none_span {

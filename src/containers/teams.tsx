@@ -115,7 +115,7 @@ export const TeamsContainer = () => {
                     showSearch
                     size='small'
                     mode="multiple"
-                    style={{ width: 150 }}
+                    style={{ width: 180 }}
                     placeholder="Гра"
                     optionFilterProp="label"
                     value={filter.games}
@@ -130,7 +130,7 @@ export const TeamsContainer = () => {
                     showSearch
                     size='small'
                     mode="tags"
-                    style={{ width: 150 }}
+                    style={{ width: 180 }}
                     placeholder="Команда"
                     optionFilterProp="label"
                     value={filter.names}
@@ -145,7 +145,7 @@ export const TeamsContainer = () => {
                     showSearch
                     size='small'
                     mode="tags"
-                    style={{ width: 150 }}
+                    style={{ width: 180 }}
                     placeholder="Капітан"
                     optionFilterProp="label"
                     value={filter.captains}
@@ -160,7 +160,7 @@ export const TeamsContainer = () => {
                     showSearch
                     mode="tags"
                     size='small'
-                    style={{ width: 150 }}
+                    style={{ width: 180 }}
                     placeholder="Телефон"
                     optionFilterProp="label"
                     value={filter.phones}
