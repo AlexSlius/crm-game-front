@@ -1,8 +1,11 @@
 import { Modal, Tabs, Flex, Button } from 'antd';
-import { TableTeam } from '../table-team';
-import { Fragment, useState } from 'react';
 
+import { Fragment, useState } from 'react';
+import { DownloadOutlined } from "@ant-design/icons";
+
+import { TableTeam } from '../table-team';
 import { TeamEditModal } from './edit-team';
+import { handleExportFile } from '../../helpers/export-file';
 import { defaultDataModalTeam } from "../../constants/default-data";
 
 export const ListTeamModal = ({
@@ -26,6 +29,7 @@ export const ListTeamModal = ({
     const [updateGetRequestReserv, setUpdateGetRequestReserv] = useState<boolean>(false);
     const [updateGetRequestСanceled, setUpdateGetRequestСanceled] = useState<boolean>(false);
     const [activeKey, setActiveKey] = useState('registration');
+    const [isLoadBtnExport, setLoadBtnExport] = useState<boolean>(false);
     const hCloseModalEdit = () => {
         setDataModal(defaultDataModalTeam);
     }
@@ -84,13 +88,22 @@ export const ListTeamModal = ({
                 footer={null}
                 destroyOnClose
             >
-                <Flex justify='end' gap={14} style={{marginTop: 20}}>
+                <Flex justify='end' gap={14} style={{ marginTop: 20 }}>
                     <Button
                         type="primary"
                         size='small'
                         className='mob-btn-stan-none'
                         onClick={() => setDataModal((prev) => ({ ...prev, show: true }))}
                     >+<span className='mob-btn-stan-none_span'>Додати команду</span></Button>
+                    <Button
+                        color="cyan"
+                        variant="solid"
+                        icon={<DownloadOutlined />}
+                        loading={isLoadBtnExport}
+                        onClick={() => { handleExportFile(`?games=${gameId}`, setLoadBtnExport); }}
+                        size='small'
+                        className='mob-btn-stan-none'
+                    />
                 </Flex>
                 <Tabs
                     activeKey={activeKey}
