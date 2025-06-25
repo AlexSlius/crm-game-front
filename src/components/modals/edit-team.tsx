@@ -33,9 +33,7 @@ export const TeamEditModal = ({
     const handlePhoneChange = (e: any) => {
         const value = e.target.value;
 
-        if (/^\+\d*$/.test(value)) {
-            setPhone(value);
-        }
+        setPhone(value);
     };
 
     const {
@@ -184,13 +182,13 @@ export const TeamEditModal = ({
                                     message: "Поле обов'язкове"
                                 },
                                 {
-                                    pattern: /^\+\d{10,14}$/,
-                                    message: "Номер має починатись з + і містити лише цифри (10–14 цифр)",
+                                    pattern: /^\d{10,14}$/,
+                                    message: "Номер має містити лише цифри (10–14 цифр)",
                                 },
                             ]}
                         >
                             <Input
-                                placeholder="+3806612547.."
+                                placeholder="3806612547.."
                                 value={phone}
                                 onChange={handlePhoneChange}
                             />
