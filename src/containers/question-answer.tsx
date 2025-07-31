@@ -9,6 +9,7 @@ import { useNoteStore } from '../store/note';
 import { defaultDataModalQuestion } from '../constants/default-data';
 import { QuestionEditModal } from '../components/modals/question-edit';
 import { useNumberOfQuestionStore } from '../store/number-of-question';
+import { formattedGame } from '../helpers/format-data'
 
 const { Title } = Typography;
 
@@ -126,6 +127,12 @@ export const QuestionAnswerContainer = () => {
             render: (text: string) => text.length > 50 ? `${text.slice(0, 50)}...` : text,
         },
         {
+            title: "Час",
+            dataIndex: "createdAt",
+            key: "createdAt",
+            render: (createdAt: string) => formattedGame(createdAt)
+        },
+        {
             title: "Відповіді",
             dataIndex: "answer",
             key: "answer",
@@ -168,6 +175,8 @@ export const QuestionAnswerContainer = () => {
         setDataTable(data);
         record(data?.totalActive || 0)
     }, [data]);
+
+    console.log('dataTable: ', dataTable);
 
     return (
         <Fragment>
