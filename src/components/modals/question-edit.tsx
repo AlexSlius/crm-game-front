@@ -188,7 +188,7 @@ export const QuestionEditModal = ({
                     !!data?.id && (
                         <Form.Item
                             label="Надсилати відповідь в чат ?"
-                            name="isAnswer"
+                            name="isAnswer" 
                         >
                             <Radio.Group
                                 options={[
