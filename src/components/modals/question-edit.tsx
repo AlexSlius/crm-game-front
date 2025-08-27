@@ -1,4 +1,4 @@
-import { Form, Input, Button, Modal, Select } from 'antd';
+import { Form, Input, Button, Modal, Select, Radio } from 'antd';
 import { useEffect } from "react";
 
 import { useAppData } from '../../store/appData';
@@ -33,7 +33,7 @@ export const QuestionEditModal = ({
 
     const handleSubmit = (values: any) => {
         if (!data?.id) {
-            mutateCreate({ ...values, chatId: '-' });
+            mutateCreate({ ...values, chatId: '-'});
         } else {
             mutateUpdate({
                 id: data.id,
@@ -184,7 +184,27 @@ export const QuestionEditModal = ({
                         showCount
                     />
                 </Form.Item>
-
+                {
+                    !!data?.id && (
+                        <Form.Item
+                            label="Надсилати відповідь в чат ?"
+                            name="isAnswer"
+                        >
+                            <Radio.Group
+                                options={[
+                                    {
+                                        label: 'Так',
+                                        value: true
+                                    },
+                                    {
+                                        label: 'Ні',
+                                        value: false
+                                    }
+                                ]}
+                            />
+                        </Form.Item>
+                    )
+                }
                 <Form.Item
                     label="Активність"
                     name="statusId"

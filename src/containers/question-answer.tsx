@@ -74,7 +74,8 @@ export const QuestionAnswerContainer = () => {
             data: {
                 ...record,
                 cityId: record.city.id,
-                statusId: record.status.id
+                statusId: record.status.id,
+                isAnswer: false
             }
         });
     }, []);
@@ -175,8 +176,6 @@ export const QuestionAnswerContainer = () => {
         setDataTable(data);
         record(data?.totalActive || 0)
     }, [data]);
-
-    console.log('dataTable: ', dataTable);
 
     return (
         <Fragment>

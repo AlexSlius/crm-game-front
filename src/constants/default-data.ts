@@ -45,6 +45,7 @@ export const defaultDataModalQuestion = {
         team: '',
         question: "",
         answer: "",
-        statusId: 9
+        statusId: 9,
+        isAnswer: false,
     }
 }
