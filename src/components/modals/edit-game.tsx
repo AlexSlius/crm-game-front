@@ -276,6 +276,10 @@ export const GameEditModal = ({
                                 placeholder="Оберіть час"
                                 format="HH:mm"
                                 minuteStep={10}
+                                disabledTime={() => ({
+                                    disabledHours: () => Array.from({ length: 24 }, (_, i) => i).filter((h) => h < 10 || h > 22),
+                                })}
+                                hideDisabledOptions
                             />
                         </Form.Item>
 
