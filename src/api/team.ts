@@ -12,6 +12,10 @@ export class Team {
         return api.patch(`${this.baseUrl}/${data.id}`, data);
     }
 
+    delete = (id: number | string) => {
+        return api.delete(`${this.baseUrl}/${id}`);
+    }
+
     getTeams = (queries?: string) => {
         return api.get(`${this.baseUrl}${queries ?? ''}`);
     }

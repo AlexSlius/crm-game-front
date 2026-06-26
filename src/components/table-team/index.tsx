@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
-import { Button, Table, Tag, Space } from 'antd';
-import { EditOutlined } from "@ant-design/icons";
+import { Button, Table, Tag, Space, Popconfirm } from 'antd';
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useQuery } from '@tanstack/react-query';
 
 import { formattedGame } from '../../helpers/format-data';
@@ -17,6 +17,8 @@ export const TableTeam = ({
     updateGetRequest = false,
     setUpdateGetRequest = () => { },
     handleOpenEdit = () => { },
+    handleDelete = () => { },
+    deletingId = null,
     setQuantity = () => { }
 }: {
     filter: any;
@@ -25,6 +27,8 @@ export const TableTeam = ({
     isModal?: boolean;
     updateGetRequest?: boolean;
     handleOpenEdit?: Function;
+    handleDelete?: Function;
+    deletingId?: number | string | null;
     setUpdateGetRequest?: Function;
     setQuantity?: Function;
 }) => {
@@ -126,17 +130,33 @@ export const TableTeam = ({
             title: "Дії",
             key: "actions",
             render: (_: any, record: any) => (
-                <Space>
+                <Space onClick={(e) => e.stopPropagation()}>
                     <Button
                         type="primary"
                         icon={<EditOutlined />}
                         size='small'
                         onClick={() => handleOpenEdit(record)}
                     />
+                    <Popconfirm
+                        title="Видалити команду?"
+                        description="Цю дію неможливо скасувати"
+                        okText="Так"
+                        cancelText="Ні"
+                        okButtonProps={{ danger: true }}
+                        onConfirm={() => handleDelete(record)}
+                    >
+                        <Button
+                            danger
+                            type="primary"
+                            icon={<DeleteOutlined />}
+                            size='small'
+                            loading={deletingId === record.id}
+                        />
+                    </Popconfirm>
                 </Space>
             ),
         },
-    ], [handleOpenEdit]);
+    ], [handleOpenEdit, handleDelete, deletingId]);
 
     useEffect(() => {
         if (data) {

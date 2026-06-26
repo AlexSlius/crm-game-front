@@ -15,6 +15,10 @@ export class Api {
         return await this.apiFatch({ url, type: 'PATCH', data })
     }
 
+    async delete(url: string) {
+        return await this.apiFatch({ url, type: 'DELETE' })
+    }
+
     getToken(): string {
         return localStorage.getItem('token') || '';
     }

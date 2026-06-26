@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react';
 import { Flex, Typography, Button, Select, DatePicker } from 'antd';
 import { Fragment } from 'react/jsx-runtime';
 import { CloseOutlined, DownloadOutlined } from "@ant-design/icons";
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 
 import { TeamEditModal } from '../components/modals/edit-team';
 import { TableTeam } from '../components/table-team';
 import { useAppData } from '../store/appData';
+import { useNoteStore } from '../store/note';
 import { useGetCitiesNow } from '../hooks/useGetCitiesNow';
 import { teams } from '../api';
 import { getQueryStringTeams } from '../helpers/get-query-teams';
@@ -35,6 +36,7 @@ export const TeamsContainer = () => {
 
     const { fetchCities, citiesData, isLoadingCity } = useGetCitiesNow();
     const { statuses, user } = useAppData();
+    const { setMessage } = useNoteStore();
     const userModer = user?.role?.id === 1;
 
     const {
@@ -91,6 +93,26 @@ export const TeamsContainer = () => {
     const refetchReload = () => {
         refetchFilter();
         setUpdateGetRequest(true);
+    }
+
+    const {
+        mutate: mutateDelete,
+        isPending: isDeleting,
+        variables: deletingId,
+    } = useMutation({
+        mutationFn: teams.delete,
+        onSuccess: (data: any) => {
+            if (data?.message) {
+                return setMessage(Array.isArray(data.message) ? data.message.join(", ") : data.message);
+            }
+
+            refetchReload();
+            setMessage('Команда успішно видалена', 'success');
+        },
+    });
+
+    const handleDelete = (record: any) => {
+        mutateDelete(record.id);
     }
 
     useEffect(() => {
@@ -243,6 +265,8 @@ export const TeamsContainer = () => {
             <TableTeam
                 filter={filter}
                 handleOpenEdit={handleOpenEdit}
+                handleDelete={handleDelete}
+                deletingId={isDeleting ? deletingId : null}
                 updateGetRequest={updateGetRequest}
                 setUpdateGetRequest={setUpdateGetRequest}
             />
