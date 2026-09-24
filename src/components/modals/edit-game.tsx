@@ -10,6 +10,7 @@ import { useNoteStore } from '../../store/note';
 import { useGetCitiesNow } from '../../hooks/useGetCitiesNow';
 import { games } from "../../api";
 import { ImageUploadFormItem } from '../upload-image';
+import { TimeSlotPicker } from '../time-slot-picker';
 
 const { TextArea } = Input;
 
@@ -270,17 +271,7 @@ export const GameEditModal = ({
                                 }
                             ]}
                         >
-                            <DatePicker
-                                style={{ width: "100%" }}
-                                picker="time"
-                                placeholder="Оберіть час"
-                                format="HH:mm"
-                                minuteStep={10}
-                                disabledTime={() => ({
-                                    disabledHours: () => Array.from({ length: 24 }, (_, i) => i).filter((h) => h < 10 || h > 22),
-                                })}
-                                hideDisabledOptions
-                            />
+                            <TimeSlotPicker />
                         </Form.Item>
 
                         <Form.Item
