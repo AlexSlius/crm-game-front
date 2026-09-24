@@ -20,6 +20,8 @@ const defaultDataModal = {
         name: '',
         timeZoneId: 291,
         statusId: 1,
+        playersMin: null,
+        playersMax: null,
         timeZone: 'Europe/Kiev'
     }
 };
@@ -84,6 +86,8 @@ export const CitiesContainer = () => {
                 name: record.name,
                 timeZoneId: record.tineZone.id,
                 statusId: record.status.id,
+                playersMin: record.playersMin,
+                playersMax: record.playersMax,
                 // --
                 timeZone: record.tineZone
             }
@@ -118,6 +122,11 @@ export const CitiesContainer = () => {
             dataIndex: "tineZone",
             key: "tineZone",
             render: (timeZone: any) => timeZone.name,
+        },
+        {
+            title: "Гравців у команді",
+            key: "players",
+            render: (_: any, record: any) => `${record.playersMin ?? 4} - ${record.playersMax ?? 10}`,
         },
         {
             title: "Статус",

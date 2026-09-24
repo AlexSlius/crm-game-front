@@ -1,4 +1,4 @@
-import { Form, Input, Button, Modal, Select } from 'antd';
+import { Form, Input, InputNumber, Button, Modal, Select, Row, Col } from 'antd';
 import { useMutation } from '@tanstack/react-query';
 
 import { useAppData } from '../../store/appData';
@@ -29,12 +29,18 @@ export const CityEditModal = ({
     });
 
     const handleSubmit = (values: any) => {
+        const payload = {
+            ...values,
+            playersMin: values.playersMin ?? null,
+            playersMax: values.playersMax ?? null,
+        };
+
         if (!data?.id) {
-            mutateCreate(values);
+            mutateCreate(payload);
         } else {
             mutateUpdate({
                 id: data.id,
-                ...values
+                ...payload
             });
         }
     };
@@ -100,6 +106,41 @@ export const CityEditModal = ({
                         options={(!data?.id ? citiesZona : (citiesZona?.length ? citiesZona : [data?.timeZone]))?.map((el: { id: number, name: string }) => ({ value: el.id, label: el.name }))}
                     />
                 </Form.Item>
+
+                <Row gutter={[20, 0]}>
+                    <Col xs={24} sm={12}>
+                        <Form.Item
+                            label="Гравців у команді від"
+                            name="playersMin"
+                            tooltip="Якщо не вказано - 4"
+                        >
+                            <InputNumber placeholder="4" min={1} max={100} precision={0} style={{ width: '100%' }} />
+                        </Form.Item>
+                    </Col>
+                    <Col xs={24} sm={12}>
+                        <Form.Item
+                            label="Гравців у команді до"
+                            name="playersMax"
+                            tooltip="Якщо не вказано - 10"
+                            dependencies={['playersMin']}
+                            rules={[
+                                ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                        const min = getFieldValue('playersMin');
+
+                                        if (value == null || min == null || value >= min) {
+                                            return Promise.resolve();
+                                        }
+
+                                        return Promise.reject(new Error('Має бути не менше ніж "від"'));
+                                    },
+                                }),
+                            ]}
+                        >
+                            <InputNumber placeholder="10" min={1} max={100} precision={0} style={{ width: '100%' }} />
+                        </Form.Item>
+                    </Col>
+                </Row>
 
                 <Form.Item
                     label="Активність"
